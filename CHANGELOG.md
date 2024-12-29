@@ -4,6 +4,10 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 
 ## BETA
 
+### UI Changes
+
+- improved messaging on plugin child bridge modal
+
 ### Other Changes
 
 - auto-fix ui theme setting property if existing value is not valid
