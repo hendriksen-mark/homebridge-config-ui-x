@@ -7,6 +7,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 ### UI Changes
 
 - improved messaging on plugin child bridge modal
+- further improvements to plugin search
 
 ### Other Changes
 
