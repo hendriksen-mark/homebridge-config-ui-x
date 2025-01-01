@@ -42,6 +42,7 @@ interface AppSettingsInterface {
   formAuth: boolean
   theme: string
   lightingMode: 'auto' | 'light' | 'dark'
+  menuMode: 'default' | 'freeze'
   loginWallpaper: string
   serverTimestamp: string
 }
@@ -63,6 +64,7 @@ export class SettingsService {
   public currentLightingMode: 'auto' | 'light' | 'dark'
   public actualLightingMode: 'light' | 'dark'
   public browserLightingMode: 'light' | 'dark'
+  public menuMode: 'default' | 'freeze'
   public loginWallpaper: string
   public serverTimeOffset = 0
   private readonly defaultTheme = 'orange'
@@ -102,6 +104,7 @@ export class SettingsService {
     this.loginWallpaper = data.loginWallpaper
     this.setLightingMode(this.lightingMode, 'user')
     this.setTheme(data.theme)
+    this.setMenuMode(data.menuMode)
     this.setTitle(this.env.homebridgeInstanceName)
     this.checkServerTime(data.serverTimestamp)
     this.setUiVersion(data.env.packageVersion)
@@ -160,6 +163,12 @@ export class SettingsService {
         bodySelector.classList.remove('dark-mode')
       }
     }
+  }
+
+  setMenuMode(value: 'default' | 'freeze') {
+    firstValueFrom(this.$api.put('/config-editor/ui', { key: 'menuMode', value }))
+      .catch(error => console.error(error))
+    this.menuMode = value
   }
 
   setTitle(title: string) {
