@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Input, OnDestroy, OnInit, viewChild } from '@angular/core'
-import { NgbActiveModal, NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap'
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { TranslatePipe, TranslateService } from '@ngx-translate/core'
 import { ToastrService } from 'ngx-toastr'
 import { firstValueFrom, Subject } from 'rxjs'
@@ -8,13 +8,12 @@ import { debounceTime, skip } from 'rxjs/operators'
 import { ApiService } from '@/app/core/api.service'
 import { RestartChildBridgesComponent } from '@/app/core/components/restart-child-bridges/restart-child-bridges.component'
 import { RestartHomebridgeComponent } from '@/app/core/components/restart-homebridge/restart-homebridge.component'
+import { SchemaFormComponent } from '@/app/core/components/schema-form/schema-form.component'
 import { ManagePluginsService } from '@/app/core/manage-plugins/manage-plugins.service'
 import { PluginSchema } from '@/app/core/manage-plugins/plugin-config/plugin-config.component'
 import { SettingsService } from '@/app/core/settings.service'
 import { IoNamespace, WsService } from '@/app/core/ws.service'
 import { environment } from '@/environments/environment'
-
-import { SchemaFormComponent } from '../../components/schema-form/schema-form.component'
 
 @Component({
   templateUrl: './custom-plugins.component.html',
@@ -22,7 +21,6 @@ import { SchemaFormComponent } from '../../components/schema-form/schema-form.co
   standalone: true,
   imports: [
     SchemaFormComponent,
-    NgbTooltip,
     TranslatePipe,
   ],
 })
@@ -46,6 +44,7 @@ export class CustomPluginsComponent implements OnInit, OnDestroy {
   public loading = true
   public saveInProgress = false
   public pluginSpinner = false
+  public saveButtonDisabled = false
   public uiLoaded = false
   public showSchemaForm = false
   public schemaFormUpdatedSubject = new Subject()
@@ -216,6 +215,12 @@ export class CustomPluginsComponent implements OnInit, OnDestroy {
           break
         case 'spinner.hide':
           this.pluginSpinner = false
+          break
+        case 'button.save.disabled':
+          this.saveButtonDisabled = true
+          break
+        case 'button.save.enabled':
+          this.saveButtonDisabled = false
           break
         default:
           console.log(e) // eslint-disable-line no-console
@@ -489,11 +494,6 @@ export class CustomPluginsComponent implements OnInit, OnDestroy {
       this.$toastr.error(error.message, this.$translate.instant('toast.title_error'))
       this.childBridges = []
     }
-  }
-
-  deletePluginConfig() {
-    this.updateConfigBlocks([])
-    this.savePluginConfig(true)
   }
 
   ngOnDestroy() {

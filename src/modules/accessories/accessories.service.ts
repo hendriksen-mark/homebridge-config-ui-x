@@ -34,7 +34,7 @@ export class AccessoriesService {
    */
   public async connect(client: any) {
     if (!this.configService.homebridgeInsecureMode) {
-      this.logger.error('Homebridge must be running in insecure mode to control accessories')
+      this.logger.error('Homebridge must be running in insecure mode to control accessories.')
       return
     }
 
@@ -136,7 +136,7 @@ export class AccessoriesService {
       if (e.response?.status === 401) {
         this.logger.warn('Homebridge must be running in insecure mode to view and control accessories from this plugin.')
       } else {
-        this.logger.error(`Failed load accessories from Homebridge: ${e.message}`)
+        this.logger.error(`Failed load accessories from Homebridge as ${e.message}.`)
       }
       return []
     })
@@ -272,7 +272,7 @@ export class AccessoriesService {
 
     accessoryLayout[user] = layout
     writeJsonSync(this.configService.accessoryLayoutPath, accessoryLayout)
-    this.logger.log(`[${user}] Accessory layout changes saved.`)
+    this.logger.log(`Accessory layout changes saved for ${user}.`)
     return layout
   }
 

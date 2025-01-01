@@ -1,12 +1,11 @@
-import { NgClass, TitleCasePipe } from '@angular/common'
+import { NgClass } from '@angular/common'
 import { Component, inject, Input, OnInit } from '@angular/core'
-import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { TranslatePipe, TranslateService } from '@ngx-translate/core'
 import { ToastrService } from 'ngx-toastr'
 import { firstValueFrom } from 'rxjs'
 
 import { ApiService } from '@/app/core/api.service'
-import { RestartChildBridgesComponent } from '@/app/core/components/restart-child-bridges/restart-child-bridges.component'
 
 interface ChildBridge {
   identifier: string
@@ -25,9 +24,7 @@ interface ChildBridge {
   templateUrl: './reset-accessories.component.html',
   standalone: true,
   imports: [
-    NgbAlert,
     NgClass,
-    TitleCasePipe,
     TranslatePipe,
   ],
 })
@@ -40,8 +37,7 @@ export class ResetAccessoriesComponent implements OnInit {
 
   @Input() childBridges: ChildBridge[] = []
   public pairings: any[] = []
-  public deleting: null | string = null
-  public deleted: string[] = []
+  public toDelete: string[] = []
 
   constructor() {}
 
@@ -63,37 +59,30 @@ export class ResetAccessoriesComponent implements OnInit {
     }
   }
 
-  removeAccessories(id: string) {
-    this.deleting = id
-
-    this.$api.delete(`/server/pairings/${id}/accessories`).subscribe({
-      next: async () => {
-        await this.loadPairings()
-
-        this.deleting = null
-        this.deleted.push(id)
-
-        this.$toastr.success('', this.$translate.instant('toast.title_success'))
-      },
-      error: (error) => {
-        this.deleting = null
-        console.error(error)
-        this.$toastr.error(this.$translate.instant('settings.unpair_bridge.unpair_error'), this.$translate.instant('toast.title_error'))
-      },
-    })
+  toggleList(id: string) {
+    if (this.toDelete.includes(id)) {
+      this.toDelete = this.toDelete.filter((item: string) => item !== id)
+    } else {
+      this.toDelete.push(id)
+    }
   }
 
-  ngOnDestroy() {
-    if (this.deleted.length) {
-      const ref = this.$modal.open(RestartChildBridgesComponent, {
-        size: 'lg',
-        backdrop: 'static',
-      })
+  cleanBridges() {
+    this.$activeModal.close()
+    this.$toastr.info(this.$translate.instant('reset.accessory_ind.wait'))
 
-      ref.componentInstance.bridges = this.deleted.map((id) => {
-        const { name, _username: username } = this.pairings.find(pairing => pairing._id === id)
-        return { name, username }
-      })
-    }
+    this.$api.delete('/server/pairings/accessories', {
+      body: this.toDelete.map((id: string) => ({
+        id,
+      })),
+    }).subscribe({
+      next: () => {
+        this.$toastr.info(this.$translate.instant('reset.accessory_ind.done'), this.$translate.instant('toast.title_success'))
+      },
+      error: (error) => {
+        console.error(error)
+        this.$toastr.error(this.$translate.instant('reset.accessory_ind.fail'), this.$translate.instant('toast.title_error'))
+      },
+    })
   }
 }

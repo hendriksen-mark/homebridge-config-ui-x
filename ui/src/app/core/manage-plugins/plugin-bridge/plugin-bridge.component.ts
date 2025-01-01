@@ -8,12 +8,11 @@ import { ToastrService } from 'ngx-toastr'
 import { firstValueFrom } from 'rxjs'
 
 import { ApiService } from '@/app/core/api.service'
+import { QrcodeComponent } from '@/app/core/components/qrcode/qrcode.component'
 import { RestartHomebridgeComponent } from '@/app/core/components/restart-homebridge/restart-homebridge.component'
 import { ManagePluginsService } from '@/app/core/manage-plugins/manage-plugins.service'
 import { PluginSchema } from '@/app/core/manage-plugins/plugin-config/plugin-config.component'
 import { SettingsService } from '@/app/core/settings.service'
-
-import { QrcodeComponent } from '../../components/qrcode/qrcode.component'
 
 interface DeviceInfo {
   category: number
@@ -58,20 +57,28 @@ export class PluginBridgeComponent implements OnInit {
 
   public canConfigure = true
   public configBlocks: any[] = []
+  public selectedBlock: number = 0
+  public isPlatform: boolean
   public enabledBlocks: Record<number, boolean> = {}
   public bridgeCache: Map<number, Record<string, any>> = new Map()
   public originalBridges: any[] = []
   public deviceInfo: Map<string, DeviceInfo | false> = new Map()
-  public showConfigFields: boolean[] = []
   public saveInProgress = false
   public canShowBridgeDebug = false
   public deleteBridges: { id: string, bridgeName: string }[] = []
+  public readonly linkChildBridges = '<a href="https://github.com/homebridge/homebridge/wiki/Child-Bridges" target="_blank"><i class="fa fa/fw fas fa-fw fa-external-link-alt"></i></a>'
+  public readonly linkDebug = '<a href="https://github.com/homebridge/homebridge-config-ui-x/wiki/Debug-Common-Values" target="_blank"><i class="fa fa-fw fa-external-link-alt"></i></a>'
 
   constructor() {}
 
   ngOnInit(): void {
+    this.isPlatform = this.schema.pluginType === 'platform'
     this.loadPluginConfig()
     this.canShowBridgeDebug = this.$settings.env.homebridgeVersion.startsWith('2')
+  }
+
+  onBlockChange(index: number) {
+    this.selectedBlock = index
   }
 
   loadPluginConfig() {
@@ -83,8 +90,13 @@ export class PluginBridgeComponent implements OnInit {
             this.enabledBlocks[i] = true
             block._bridge.env = block._bridge.env || {}
             this.bridgeCache.set(i, block._bridge)
-            this.getDeviceInfo(block._bridge.username)
-            this.originalBridges.push(block._bridge)
+            this.getDeviceInfo(block._bridge.username).then(() => {
+              // If the bridge does not have a name in the config, then override it from the pairing
+              if (!block._bridge.name) {
+                block._bridge.name = this.deviceInfo[block._bridge.username]?.displayName
+              }
+              this.originalBridges.push(block._bridge)
+            })
           }
         }
 
@@ -105,7 +117,7 @@ export class PluginBridgeComponent implements OnInit {
 
   async toggleExternalBridge(block: any, enable: boolean, index: number) {
     if (!enable) {
-      // Store unpaired child bridge id for deletion, so no bridges are orphaned
+      // Store unused child bridge id for deletion, so no bridges are orphaned
       const originalBridge = this.originalBridges.find(b => b.username === block._bridge.username)
       if (originalBridge) {
         this.deleteBridges.push({
@@ -166,13 +178,15 @@ export class PluginBridgeComponent implements OnInit {
     try {
       await firstValueFrom(this.$api.post(`/config-editor/plugin/${encodeURIComponent(this.plugin.name)}`, this.configBlocks))
 
-      // Delete unpaired bridges, so no bridges are orphaned
-      for (const bridge of this.deleteBridges) {
-        try {
-          await firstValueFrom(this.$api.delete(`/server/pairings/${bridge.id.replace(/:/g, '')}`))
-        } catch (error) {
-          console.error(error)
-          this.$toastr.error(this.$translate.instant('settings.unpair_bridge.unpair_error'), this.$translate.instant('toast.title_error'))
+      // Delete unused bridges, so no bridges are orphaned
+      if (this.$settings.env.serviceMode) {
+        for (const bridge of this.deleteBridges) {
+          try {
+            await firstValueFrom(this.$api.delete(`/server/pairings/${bridge.id.replace(/:/g, '')}`))
+          } catch (error) {
+            console.error(error)
+            this.$toastr.error(this.$translate.instant('settings.reset_bridge.error'), this.$translate.instant('toast.title_error'))
+          }
         }
       }
 
@@ -220,9 +234,5 @@ export class PluginBridgeComponent implements OnInit {
   openFullConfigEditor() {
     this.$router.navigate(['/config'])
     this.$activeModal.close()
-  }
-
-  toggleConfigFields(index: number) {
-    this.showConfigFields[index] = !this.showConfigFields[index]
   }
 }

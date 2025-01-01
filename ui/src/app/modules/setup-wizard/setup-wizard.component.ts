@@ -11,7 +11,7 @@ import { firstValueFrom } from 'rxjs'
 import { ApiService } from '@/app/core/api.service'
 import { AuthService } from '@/app/core/auth/auth.service'
 import { SettingsService } from '@/app/core/settings.service'
-import { RestoreComponent } from '@/app/modules/settings/restore/restore.component'
+import { RestoreComponent } from '@/app/modules/settings/backup/restore/restore.component'
 import { environment } from '@/environments/environment'
 
 @Component({
