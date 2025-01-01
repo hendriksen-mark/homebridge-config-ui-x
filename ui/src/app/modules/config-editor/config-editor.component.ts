@@ -507,7 +507,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
               },
               platforms: {
                 type: 'array',
-                description: 'Any plugin that exposes a platform should have it\'s config entered in this array.'
+                description: 'Any plugin that exposes a platform should have its config entered in this array.'
                   + '\nSeparate each plugin config block using a comma.',
                 items: {
                   type: 'object',
@@ -549,7 +549,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
               },
               accessories: {
                 type: 'array',
-                description: 'Any plugin that exposes an accessory should have it\'s config entered in this array.'
+                description: 'Any plugin that exposes an accessory should have its config entered in this array.'
                   + '\nSeparate each plugin config block using a comma.',
                 items: {
                   type: 'object',
