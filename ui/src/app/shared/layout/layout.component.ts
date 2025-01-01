@@ -10,9 +10,8 @@ import { AuthService } from '@/app/core/auth/auth.service'
 import { ConfirmComponent } from '@/app/core/components/confirm/confirm.component'
 import { SettingsService } from '@/app/core/settings.service'
 import { IoNamespace, WsService } from '@/app/core/ws.service'
+import { SidebarComponent } from '@/app/shared/layout/sidebar/sidebar.component'
 import { environment } from '@/environments/environment'
-
-import { SidebarComponent } from './sidebar/sidebar.component'
 
 @Component({
   selector: 'app-layout',
@@ -68,11 +67,9 @@ export class LayoutComponent implements OnInit {
       ref.componentInstance.confirmButtonLabel = this.$translate.instant('menu.tooltip_restart')
       ref.componentInstance.faIconClass = 'fas fa-fw-power-off'
 
-      ref.result.then(() => {
-        this.$router.navigate(['/restart'])
-      }).catch(() => {
-        // do nothing
-      })
+      ref.result
+        .then(() => this.$router.navigate(['/restart']))
+        .catch(() => { /* do nothing */ })
     }
   }
 }
