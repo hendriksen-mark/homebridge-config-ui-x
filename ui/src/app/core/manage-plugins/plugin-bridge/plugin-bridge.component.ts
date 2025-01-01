@@ -105,7 +105,7 @@ export class PluginBridgeComponent implements OnInit {
 
   async toggleExternalBridge(block: any, enable: boolean, index: number) {
     if (!enable) {
-      // Store unpaired child bridge id for deletion, so no bridges are orphaned
+      // Store unused child bridge id for deletion, so no bridges are orphaned
       const originalBridge = this.originalBridges.find(b => b.username === block._bridge.username)
       if (originalBridge) {
         this.deleteBridges.push({
@@ -166,13 +166,15 @@ export class PluginBridgeComponent implements OnInit {
     try {
       await firstValueFrom(this.$api.post(`/config-editor/plugin/${encodeURIComponent(this.plugin.name)}`, this.configBlocks))
 
-      // Delete unpaired bridges, so no bridges are orphaned
-      for (const bridge of this.deleteBridges) {
-        try {
-          await firstValueFrom(this.$api.delete(`/server/pairings/${bridge.id.replace(/:/g, '')}`))
-        } catch (error) {
-          console.error(error)
-          this.$toastr.error(this.$translate.instant('settings.unpair_bridge.unpair_error'), this.$translate.instant('toast.title_error'))
+      // Delete unused bridges, so no bridges are orphaned
+      if (this.$settings.env.serviceMode) {
+        for (const bridge of this.deleteBridges) {
+          try {
+            await firstValueFrom(this.$api.delete(`/server/pairings/${bridge.id.replace(/:/g, '')}`))
+          } catch (error) {
+            console.error(error)
+            this.$toastr.error(this.$translate.instant('settings.reset_bridge.error'), this.$translate.instant('toast.title_error'))
+          }
         }
       }
 

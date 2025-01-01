@@ -50,7 +50,7 @@ export class ConfigEditorService {
     scheduleRule.minute = 10
     scheduleRule.second = Math.floor(Math.random() * 59) + 1
 
-    this.logger.debug('Next config.json backup cleanup scheduled for:', scheduleRule.nextInvocationDate(new Date()).toString())
+    this.logger.debug(`Next config.json backup cleanup scheduled for ${scheduleRule.nextInvocationDate(new Date()).toString()}.`)
 
     this.schedulerService.scheduleJob('cleanup-config-backups', scheduleRule, () => {
       this.logger.log('Running job to cleanup config.json backup files older than 60 days...')
@@ -177,7 +177,7 @@ export class ConfigEditorService {
       if (e.code === 'ENOENT') {
         await this.ensureBackupPathExists()
       } else {
-        this.logger.warn('Could not create a backup of the config.json file to', this.configService.configBackupPath, e.message)
+        this.logger.warn(`Could not create a backup of the config.json file to ${this.configService.configBackupPath} as ${e.message}.`)
       }
     }
 
@@ -421,8 +421,8 @@ export class ConfigEditorService {
     try {
       await ensureDir(this.configService.configBackupPath)
     } catch (e) {
-      this.logger.error('Could not create directory for config backups:', this.configService.configBackupPath, e.message)
-      this.logger.error('Config backups will continue to use', this.configService.storagePath)
+      this.logger.error(`Could not create directory for config backups ${this.configService.configBackupPath} as ${e.message}.`)
+      this.logger.error(`Config backups will continue to use ${this.configService.storagePath}.`)
       this.configService.configBackupPath = this.configService.storagePath
     }
   }
@@ -440,7 +440,7 @@ export class ConfigEditorService {
         }
       }
     } catch (e) {
-      this.logger.warn('Failed to cleanup old config.json backup files:', e.message)
+      this.logger.warn(`Failed to cleanup old config.json backup files as ${e.message}`)
     }
   }
 
@@ -474,7 +474,7 @@ export class ConfigEditorService {
         await remove(sourcePath)
       }
     } catch (e) {
-      this.logger.warn('An error occurred while migrating config.json backups to new location', e.message)
+      this.logger.warn(`Migrating config.json backups to new location failed as ${e.message}.`)
     }
   }
 

@@ -154,12 +154,12 @@ export class HomebridgeServiceHelper {
     switch (this.action) {
       case 'install': {
         this.nvmCheck()
-        this.logger(`Installing ${this.serviceName} Service`)
+        this.logger(`Installing ${this.serviceName} service...`)
         this.installer.install()
         break
       }
       case 'uninstall': {
-        this.logger(`Removing ${this.serviceName} Service`)
+        this.logger(`Removing ${this.serviceName} service...`)
         this.installer.uninstall()
         break
       }
@@ -172,7 +172,7 @@ export class HomebridgeServiceHelper {
         break
       }
       case 'restart': {
-        this.logger(`Restarting ${this.serviceName} Service`)
+        this.logger(`Restarting ${this.serviceName} service...`)
         this.installer.restart()
         break
       }
@@ -263,7 +263,7 @@ export class HomebridgeServiceHelper {
   private setEnv() {
     // Ensure service name is valid
     if (!this.serviceName.match(/^[a-z0-9-]+$/i)) {
-      this.logger('ERROR: Service name must not contain spaces or special characters', 'fail')
+      this.logger('Service name must not contain spaces or special characters.', 'fail')
       process.exit(1)
     }
 
@@ -317,7 +317,7 @@ export class HomebridgeServiceHelper {
     }
 
     // work out the log path
-    this.logger(`Logging to ${this.logPath}`)
+    this.logger(`Logging to ${this.logPath}.`)
 
     // redirect all stdout to the log file
     this.log = createWriteStream(this.logPath, { flags: 'a' })
@@ -367,7 +367,7 @@ export class HomebridgeServiceHelper {
       await write(logFileHandle, logBuffer)
       await close(logFileHandle)
     } catch (e) {
-      this.logger(`Failed to truncate log file: ${e.message}`, 'fail')
+      this.logger(`Failed to truncate log file: ${e.message}.`, 'fail')
     }
   }
 
@@ -381,8 +381,8 @@ export class HomebridgeServiceHelper {
       process.exit(0)
     }
 
-    this.logger(`Homebridge Storage Path: ${this.storagePath}`)
-    this.logger(`Homebridge Config Path: ${process.env.UIX_CONFIG_PATH}`)
+    this.logger(`Homebridge storage path: ${this.storagePath}.`)
+    this.logger(`Homebridge config path: ${process.env.UIX_CONFIG_PATH}.`)
 
     // start the interval to truncate the logs every two hours
     setInterval(() => {
@@ -401,19 +401,19 @@ export class HomebridgeServiceHelper {
       await this.configCheck()
 
       // log os info
-      this.logger(`OS: ${type()} ${release()} ${arch()}`)
-      this.logger(`Node.js ${process.version} ${process.execPath}`)
+      this.logger(`OS: ${type()} ${release()} ${arch()}.`)
+      this.logger(`Node.js ${process.version} ${process.execPath}.`)
 
       // work out the homebridge binary path
       this.homebridgeBinary = await this.findHomebridgePath()
-      this.logger(`Homebridge Path: ${this.homebridgeBinary}`)
+      this.logger(`Homebridge path: ${this.homebridgeBinary}.`)
 
       // load startup options if they exist
       await this.loadHomebridgeStartupOptions()
 
       // get the standalone ui binary on this system
       this.uiBinary = resolve(process.env.UIX_BASE_PATH, 'dist', 'bin', 'standalone.js')
-      this.logger(`UI Path: ${this.uiBinary}`)
+      this.logger(`UI path: ${this.uiBinary}.`)
     } catch (e) {
       this.logger(e.message)
       process.exit(1)
@@ -432,7 +432,7 @@ export class HomebridgeServiceHelper {
 
     // delay the launch of homebridge on Raspberry Pi 1/Zero by 20 seconds
     if (cpus().length === 1 && arch() === 'arm') {
-      this.logger('Delaying Homebridge startup by 20 seconds on low powered server')
+      this.logger('Delaying Homebridge startup by 20 seconds on low powered server.')
       setTimeout(() => {
         this.runHomebridge()
       }, 20000)
@@ -468,7 +468,7 @@ export class HomebridgeServiceHelper {
    */
   private runHomebridge() {
     if (!this.homebridgeBinary || !pathExistsSync(this.homebridgeBinary)) {
-      this.logger('Could not find Homebridge. Make sure you have installed homebridge using the -g flag then restart.', 'fail')
+      this.logger('Could not find Homebridge. Make sure you have installed Homebridge using the -g flag then restart.', 'fail')
       this.logger('npm install -g --unsafe-perm homebridge', 'fail')
       return
     }
@@ -480,11 +480,11 @@ export class HomebridgeServiceHelper {
     }
 
     if (this.homebridgeOpts.length) {
-      this.logger(`Starting Homebridge with extra flags: ${this.homebridgeOpts.join(' ')}`)
+      this.logger(`Starting Homebridge with extra flags: ${this.homebridgeOpts.join(' ')}.`)
     }
 
     if (Object.keys(this.homebridgeCustomEnv).length) {
-      this.logger(`Starting Homebridge with custom env: ${JSON.stringify(this.homebridgeCustomEnv)}`)
+      this.logger(`Starting Homebridge with custom env: ${JSON.stringify(this.homebridgeCustomEnv)}.`)
     }
 
     // env setup
@@ -524,7 +524,7 @@ export class HomebridgeServiceHelper {
       this.ipcService.setHomebridgeVersion(this.homebridgePackage.version)
     }
 
-    this.logger(`Started Homebridge v${this.homebridgePackage.version} with PID: ${this.homebridge.pid}`)
+    this.logger(`Started Homebridge v${this.homebridgePackage.version} with PID: ${this.homebridge.pid}.`)
 
     this.homebridge.stdout.on('data', (data) => {
       this.log.write(data)
@@ -545,7 +545,7 @@ export class HomebridgeServiceHelper {
    * @param signal
    */
   private handleHomebridgeClose(code: number, signal: string) {
-    this.logger(`Homebridge Process Ended. Code: ${code}, Signal: ${signal}`)
+    this.logger(`Homebridge process ended. Code: ${code}, signal: ${signal}.`)
 
     this.checkForStaleHomebridgeProcess()
     this.refreshHomebridgePackage()
@@ -570,7 +570,7 @@ export class HomebridgeServiceHelper {
       // extract services
       this.ipcService = ui.get(main.HomebridgeIpcService)
     } catch (e) {
-      this.logger('ERROR: The user interface threw an unhandled error')
+      this.logger('The user interface threw an unhandled error.')
       console.error(e)
 
       setTimeout(() => {
@@ -645,10 +645,10 @@ export class HomebridgeServiceHelper {
       if (await pathExists(this.homebridgeModulePath)) {
         this.homebridgePackage = await readJson(join(this.homebridgeModulePath, 'package.json'))
       } else {
-        this.logger(`Homebridge not longer found at ${this.homebridgeModulePath}`, 'fail')
+        this.logger(`Homebridge not longer found at ${this.homebridgeModulePath}.`, 'fail')
         this.homebridgeModulePath = undefined
         this.homebridgeBinary = await this.findHomebridgePath()
-        this.logger(`Found New Homebridge Path: ${this.homebridgeBinary}`)
+        this.logger(`Found new Homebridge path: ${this.homebridgeBinary}.`)
       }
     } catch (e) {
       console.log(e)
@@ -661,7 +661,7 @@ export class HomebridgeServiceHelper {
   private nodeVersionCheck() {
     // 64 = v10;
     if (Number.parseInt(process.versions.modules, 10) < 64) {
-      this.logger(`ERROR: Node.js v10.13.0 or greater is required. Current: ${process.version}.`, 'fail')
+      this.logger(`Node.js v10.13.0 or greater is required, current: ${process.version}.`, 'fail')
       process.exit(1)
     }
   }
@@ -704,7 +704,7 @@ export class HomebridgeServiceHelper {
 
     console.log('')
 
-    this.logger('Homebridge Setup Complete', 'succeed')
+    this.logger('Homebridge setup complete.', 'succeed')
   }
 
   /**
@@ -713,9 +713,9 @@ export class HomebridgeServiceHelper {
   public async portCheck() {
     const inUse = await tcpCheck(this.uiPort)
     if (inUse) {
-      this.logger(`ERROR: Port ${this.uiPort} is already in use by another process on this host.`, 'fail')
-      this.logger('You can specify another port using the --port flag, eg.', 'fail')
-      this.logger(`EXAMPLE: hb-service ${this.action} --port 8581`, 'fail')
+      this.logger(`Port ${this.uiPort} is already in use by another process on this host.`, 'fail')
+      this.logger('You can specify another port using the --port flag, e.g.:', 'fail')
+      this.logger(`hb-service ${this.action} --port 8581`, 'fail')
       process.exit(1)
     }
   }
@@ -725,12 +725,12 @@ export class HomebridgeServiceHelper {
    */
   public async storagePathCheck() {
     if (platform() === 'darwin' && !await pathExists(dirname(this.storagePath))) {
-      this.logger(`Cannot create Homebridge storage directory, base path does not exist: ${dirname(this.storagePath)}`, 'fail')
+      this.logger(`Cannot create Homebridge storage directory, base path does not exist: ${dirname(this.storagePath)}.`, 'fail')
       process.exit(1)
     }
 
     if (!await pathExists(this.storagePath)) {
-      this.logger(`Creating Homebridge directory: ${this.storagePath}`)
+      this.logger(`Creating Homebridge directory: ${this.storagePath}.`)
       await mkdirp(this.storagePath)
       await this.chownPath(this.storagePath)
     }
@@ -745,7 +745,7 @@ export class HomebridgeServiceHelper {
     let restartRequired = false
 
     if (!await pathExists(process.env.UIX_CONFIG_PATH)) {
-      this.logger(`Creating default config.json: ${process.env.UIX_CONFIG_PATH}`)
+      this.logger(`Creating default config.json: ${process.env.UIX_CONFIG_PATH}.`)
       await this.createDefaultConfig()
       restartRequired = true
     }
@@ -761,7 +761,7 @@ export class HomebridgeServiceHelper {
 
       // if the config block does not exist, then create it
       if (!uiConfigBlock) {
-        this.logger(`Adding missing UI platform block to ${process.env.UIX_CONFIG_PATH}`, 'info')
+        this.logger(`Adding missing UI platform block to ${process.env.UIX_CONFIG_PATH}.`, 'info')
         uiConfigBlock = await this.createDefaultUiConfig()
         currentConfig.platforms.push(uiConfigBlock)
         saveRequired = true
@@ -771,7 +771,7 @@ export class HomebridgeServiceHelper {
       // ensure the port is set
       if (this.action !== 'install' && typeof uiConfigBlock.port !== 'number') {
         uiConfigBlock.port = await this.getLastKnownUiPort()
-        this.logger(`Added missing port number to UI config - ${uiConfigBlock.port}`, 'info')
+        this.logger(`Added missing port number to UI config: ${uiConfigBlock.port}.`, 'info')
         saveRequired = true
         restartRequired = true
       }
@@ -781,7 +781,7 @@ export class HomebridgeServiceHelper {
         // correct the port
         if (uiConfigBlock.port !== this.uiPort) {
           uiConfigBlock.port = this.uiPort
-          this.logger(`WARNING: HOMEBRIDGE UI PORT IN ${process.env.UIX_CONFIG_PATH} CHANGED TO ${this.uiPort}`, 'warn')
+          this.logger(`Homebridge UI port in ${process.env.UIX_CONFIG_PATH} changed to: ${this.uiPort}.`, 'warn')
         }
         // delete unnecessary config
         delete uiConfigBlock.restart
@@ -793,7 +793,7 @@ export class HomebridgeServiceHelper {
       // ensure the ui port is defined and is a number
       if (typeof uiConfigBlock.port !== 'number') {
         uiConfigBlock.port = await this.getLastKnownUiPort()
-        this.logger(`Added missing port number to UI config - ${uiConfigBlock.port}`, 'info')
+        this.logger(`Added missing port number to UI config: ${uiConfigBlock.port}.`, 'info')
         saveRequired = true
         restartRequired = true
       }
@@ -801,21 +801,21 @@ export class HomebridgeServiceHelper {
       // check the bridge section exists
       if (!currentConfig.bridge) {
         currentConfig.bridge = await this.generateBridgeConfig()
-        this.logger('Added missing Homebridge bridge section to the config.json', 'info')
+        this.logger('Added missing Homebridge bridge section to the config.json.', 'info')
         saveRequired = true
       }
 
       // ensure port is set in bridge config
       if (!currentConfig.bridge.port) {
         currentConfig.bridge.port = await this.generatePort()
-        this.logger(`Added port to the Homebridge bridge section of the config.json: ${currentConfig.bridge.port}`, 'info')
+        this.logger(`Added port to the Homebridge bridge section of the config.json: ${currentConfig.bridge.port}.`, 'info')
         saveRequired = true
       }
 
       // ensure bridge port is not the same as the UI port
       if ((uiConfigBlock && currentConfig.bridge.port === uiConfigBlock.port) || currentConfig.bridge.port === 8080) {
         currentConfig.bridge.port = await this.generatePort()
-        this.logger(`Bridge port must not be the same as the UI port. Changing bridge port to ${currentConfig.bridge.port}.`, 'info')
+        this.logger(`Bridge port must not be the same as the UI port. Changing bridge port to: ${currentConfig.bridge.port}.`, 'info')
         saveRequired = true
       }
 
@@ -823,7 +823,7 @@ export class HomebridgeServiceHelper {
       if (currentConfig.plugins && Array.isArray(currentConfig.plugins)) {
         if (!currentConfig.plugins.includes('homebridge-config-ui-x')) {
           currentConfig.plugins.push('homebridge-config-ui-x')
-          this.logger('Added homebridge-config-ui-x to the plugins array in the config.json', 'info')
+          this.logger('Added Homebridge UI to the plugins array in the config.json.', 'info')
           saveRequired = true
         }
       }
@@ -1026,7 +1026,7 @@ export class HomebridgeServiceHelper {
       }
 
       // kill the stale Homebridge process
-      this.logger(`Found stale Homebridge process running on port ${currentConfig.bridge.port} with PID ${pid}, killing...`)
+      this.logger(`Found stale Homebridge process running on port: ${currentConfig.bridge.port}, with PID: ${pid}, killing...`)
       process.kill(pid, 'SIGKILL')
     } catch (e) {
       // do nothing
@@ -1038,7 +1038,7 @@ export class HomebridgeServiceHelper {
    */
   private async tailLogs() {
     if (!existsSync(this.logPath)) {
-      this.logger(`ERROR: Log file does not exist at expected location: ${this.logPath}`, 'fail')
+      this.logger(`Log file does not exist at expected location: ${this.logPath}.`, 'fail')
       process.exit(1)
     }
 
@@ -1071,7 +1071,7 @@ export class HomebridgeServiceHelper {
   private async viewLogs() {
     this.installer.viewLogs()
     if (!existsSync(this.logPath)) {
-      this.logger(`ERROR: Log file does not exist at expected location: ${this.logPath}`, 'fail')
+      this.logger(`Log file does not exist at expected location: ${this.logPath}.`, 'fail')
       process.exit(1)
     }
 
@@ -1148,7 +1148,7 @@ export class HomebridgeServiceHelper {
         }
       }
     } catch (e) {
-      this.logger(`Failed to load startup options ${e.message}`)
+      this.logger(`Failed to load startup options as ${e.message}.`)
     }
   }
 
@@ -1296,13 +1296,13 @@ export class HomebridgeServiceHelper {
     try {
       const res = await axios.get(`http://localhost:${this.uiPort}/api`)
       if (res.data === 'Hello World!') {
-        this.logger('Homebridge UI Running', 'succeed')
+        this.logger('Homebridge UI running.', 'succeed')
       } else {
-        this.logger('Unexpected Response', 'fail')
+        this.logger('Unexpected response.', 'fail')
         process.exit(1)
       }
     } catch (e) {
-      this.logger('Homebridge UI Not Running', 'fail')
+      this.logger('Homebridge UI not running.', 'fail')
       process.exit(1)
     }
   }
@@ -1359,7 +1359,7 @@ export class HomebridgeServiceHelper {
     const cwd = dirname(process.env.UIX_CUSTOM_PLUGIN_PATH)
 
     if (!await pathExists(cwd)) {
-      this.logger(`Path does not exist: "${cwd}"`, 'fail')
+      this.logger(`Path does not exist: ${cwd}.`, 'fail')
     }
 
     let cmd: string
@@ -1381,9 +1381,9 @@ export class HomebridgeServiceHelper {
         cwd,
         stdio: 'inherit',
       })
-      this.logger(`Installed ${target.name}@${target.version}`, 'succeed')
+      this.logger(`Installed ${target.name}@${target.version}.`, 'succeed')
     } catch (e) {
-      this.logger('Plugin installation failed.', 'fail')
+      this.logger(`Plugin installation failed as ${e.message}.`, 'fail')
     }
   }
 }

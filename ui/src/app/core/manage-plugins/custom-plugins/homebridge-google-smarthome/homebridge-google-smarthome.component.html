@@ -15,21 +15,19 @@
   @if (!$settings.env.enableAccessories) {
   <div class="modal-body">
     @if (!$settings.env.enableAccessories) {
-    <div>
-      <div class="alert alert-warning" role="alert">
-        <p>{{ 'accessories.message_must_use_insecure_mode' | translate }}</p>
-        <p class="mb-0">
-          <span>{{ 'accessories.message_please_see' | translate }} </span>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://github.com/homebridge/homebridge-config-ui-x/wiki/Enabling-Accessory-Control"
-          >
-            https://github.com/homebridge/homebridge-config-ui-x/wiki/Enabling-Accessory-Control
-          </a>
-          <span> {{ 'accessories.message_for_more_information' | translate }}</span>
-        </p>
-      </div>
+    <div class="alert alert-warning" role="alert">
+      <p>{{ 'accessories.message_must_use_insecure_mode' | translate }}</p>
+      <p class="mb-0">
+        <span>{{ 'accessories.message_please_see' | translate }} </span>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/homebridge/homebridge-config-ui-x/wiki/Enabling-Accessory-Control"
+        >
+          https://github.com/homebridge/homebridge-config-ui-x/wiki/Enabling-Accessory-Control
+        </a>
+        <span> {{ 'accessories.message_for_more_information' | translate }}</span>
+      </p>
     </div>
     }
   </div>
@@ -63,7 +61,7 @@
     } @if (gshConfig && gshConfig.token) {
     <div class="mt-3">
       @if (schema.footerDisplay) {
-      <markdown class="plugin-md" [data]="schema.footerDisplay"> </markdown>
+      <markdown class="plugin-md" [data]="schema.footerDisplay"></markdown>
       }
     </div>
     } @if (gshConfig && gshConfig.token) {

@@ -1,8 +1,6 @@
 <div class="modal-content hb-plugin-settings-modal">
   <div class="modal-header">
-    <h5 class="modal-title">
-      {{ 'plugins.settings.title_settings' | translate }}: {{ plugin.displayName || plugin.name }}
-    </h5>
+    <h5 class="modal-title">{{ plugin.displayName || plugin.name }}</h5>
     <button
       type="button"
       class="close"
@@ -20,11 +18,9 @@
       <i class="fa fa-fw fa-cog fa-spin" style="font-size: 75px"></i>
     </div>
     } @if (!loading && !canConfigure) {
-    <div>
-      <div class="alert alert-warning">
-        {{ 'plugins.settings.message_manual_config_required' | translate }} {{
-        'plugins.settings.message_consult_documentation' | translate }}
-      </div>
+    <div class="alert alert-warning">
+      {{ 'plugins.settings.message_manual_config_required' | translate }} {{
+      'plugins.settings.message_consult_documentation' | translate }}
     </div>
     }
 

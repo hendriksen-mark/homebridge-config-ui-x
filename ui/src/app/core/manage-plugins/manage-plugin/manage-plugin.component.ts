@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common'
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
@@ -26,6 +27,7 @@ import { PluginsMarkdownDirective } from '../../directives/plugins.markdown.dire
     NgxMdModule,
     PluginsMarkdownDirective,
     TranslatePipe,
+    NgClass,
   ],
 })
 
@@ -40,6 +42,7 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
   private $ws = inject(WsService)
 
   @Input() pluginName: string
+  @Input() pluginDisplayName: string
   @Input() targetVersion = 'latest'
   @Input() latestVersion: string
   @Input() installedVersion: string
