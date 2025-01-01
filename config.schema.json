@@ -155,6 +155,26 @@
           }
         ]
       },
+      "menuMode": {
+        "title": "Menu Mode",
+        "description": "Modes for the UI side menu.",
+        "type": "string",
+        "default": "default",
+        "oneOf": [
+          {
+            "title": "Default",
+            "enum": [
+              "default"
+            ]
+          },
+          {
+            "title": "Freeze",
+            "enum": [
+              "freeze"
+            ]
+          }
+        ]
+      },
       "restart": {
         "title": "Custom Restart Command",
         "type": "string",

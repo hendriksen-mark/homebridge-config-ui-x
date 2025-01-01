@@ -70,9 +70,9 @@ export class AuthService {
       }
     } catch (e) {
       if (e instanceof ForbiddenException) {
-        this.logger.warn('Failed login attempt')
-        this.logger.warn('If you\'ve forgotten your password you can reset to the default '
-          + `of admin/admin by deleting the "auth.json" file (${this.configService.authPath}) and then restarting Homebridge.`)
+        this.logger.warn('Failed login attempt.')
+        this.logger.warn('If you have forgotten your password, you can reset to the default '
+          + `of admin/admin by deleting the "auth.json" file at ${this.configService.authPath} and then restarting Homebridge.`)
         throw e
       }
 
@@ -324,7 +324,7 @@ export class AuthService {
 
     // update the auth.json
     await this.saveUserFile(authfile)
-    this.logger.warn(`Added new user: ${user.username}`)
+    this.logger.warn(`Added new user: ${user.username}.`)
 
     return this.desensitiseUserProfile(newUser)
   }
@@ -351,7 +351,7 @@ export class AuthService {
 
     // update the auth.json
     await this.saveUserFile(authfile)
-    this.logger.warn(`Deleted user with ID ${id}`)
+    this.logger.warn(`Deleted user with ID ${id}.`)
   }
 
   /**
@@ -373,7 +373,7 @@ export class AuthService {
         throw new ConflictException(`User with username '${update.username}' already exists.`)
       }
 
-      this.logger.log(`Updated user: Changed username from '${user.username}' to '${update.username}'`)
+      this.logger.log(`Updated user: changed username from ${user.username} to ${update.username}.`)
       user.username = update.username
     }
 
@@ -388,7 +388,7 @@ export class AuthService {
 
     // update the auth.json
     await this.saveUserFile(authfile)
-    this.logger.log(`Updated user: ${user.username}`)
+    this.logger.log(`Updated user: ${user.username}.`)
 
     return this.desensitiseUserProfile(user)
   }
@@ -461,7 +461,7 @@ export class AuthService {
     if (authenticator.verify({ token: code, secret: user.otpSecret })) {
       user.otpActive = true
       await this.saveUserFile(authfile)
-      this.logger.warn(`Activated 2FA for '${user.username}'.`)
+      this.logger.warn(`Activated 2FA for ${user.username}.`)
       return this.desensitiseUserProfile(user)
     } else {
       throw new BadRequestException('2FA code is not valid.')
@@ -487,7 +487,7 @@ export class AuthService {
 
     await this.saveUserFile(authfile)
 
-    this.logger.warn(`Deactivated 2FA for '${username}'.`)
+    this.logger.warn(`Deactivated 2FA for ${username}.`)
 
     return this.desensitiseUserProfile(user)
   }
@@ -499,7 +499,7 @@ export class AuthService {
     const otpCacheKey = user.username + otp
 
     if (this.otpUsageCache.get(otpCacheKey)) {
-      this.logger.warn(`[${user.username}] attempted to reuse one-time-password.`)
+      this.logger.warn(`${user.username} attempted to reuse one-time-password.`)
       return false
     }
 
