@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Input, OnDestroy, OnInit, viewChild } from '@angular/core'
-import { NgbActiveModal, NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap'
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { TranslatePipe, TranslateService } from '@ngx-translate/core'
 import { ToastrService } from 'ngx-toastr'
 import { firstValueFrom, Subject } from 'rxjs'
@@ -22,7 +22,6 @@ import { SchemaFormComponent } from '../../components/schema-form/schema-form.co
   standalone: true,
   imports: [
     SchemaFormComponent,
-    NgbTooltip,
     TranslatePipe,
   ],
 })
@@ -46,6 +45,7 @@ export class CustomPluginsComponent implements OnInit, OnDestroy {
   public loading = true
   public saveInProgress = false
   public pluginSpinner = false
+  public saveButtonDisabled = false
   public uiLoaded = false
   public showSchemaForm = false
   public schemaFormUpdatedSubject = new Subject()
@@ -216,6 +216,12 @@ export class CustomPluginsComponent implements OnInit, OnDestroy {
           break
         case 'spinner.hide':
           this.pluginSpinner = false
+          break
+        case 'button.save.disabled':
+          this.saveButtonDisabled = true
+          break
+        case 'button.save.enabled':
+          this.saveButtonDisabled = false
           break
         default:
           console.log(e) // eslint-disable-line no-console
@@ -489,11 +495,6 @@ export class CustomPluginsComponent implements OnInit, OnDestroy {
       this.$toastr.error(error.message, this.$translate.instant('toast.title_error'))
       this.childBridges = []
     }
-  }
-
-  deletePluginConfig() {
-    this.updateConfigBlocks([])
-    this.savePluginConfig(true)
   }
 
   ngOnDestroy() {

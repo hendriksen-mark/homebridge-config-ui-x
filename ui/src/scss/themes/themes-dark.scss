@@ -285,6 +285,32 @@
     .modal-body {
       background-color: $modalBackground;
       color: #ffffff;
+
+      input,
+      select {
+        border-color: #242424 !important; //$backgroundColor;
+        background-color: #242424 !important;
+        color: #ffffff;
+
+        &::placeholder {
+          color: #bdbdbd;
+        }
+      }
+
+      input[readonly] {
+        color: #717171;
+        cursor: not-allowed;
+      }
+
+      .list-group-item {
+        background-color: $secondaryBackground;
+
+        .close {
+          color: $darkModePrimary;
+          opacity: 1 !important;
+          text-shadow: none;
+        }
+      }
     }
 
     .modal-footer {
@@ -362,34 +388,6 @@
 
       .badge-primary {
         background-color: $darkModePrimary !important;
-      }
-    }
-
-    .hb-plugin-settings-modal {
-      input,
-      select {
-        border-color: #242424 !important; //$backgroundColor;
-        background-color: #242424 !important;
-        color: #ffffff;
-
-        &::placeholder {
-          color: #bdbdbd;
-        }
-      }
-
-      input[readonly] {
-        color: #717171;
-        cursor: not-allowed;
-      }
-
-      .list-group-item {
-        background-color: $secondaryBackground;
-
-        .close {
-          color: $darkModePrimary;
-          opacity: 1 !important;
-          text-shadow: none;
-        }
       }
     }
 

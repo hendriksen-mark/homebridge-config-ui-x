@@ -1,8 +1,6 @@
-<div class="modal-content hb-plugin-settings-modal">
+<div class="modal-content">
   <div class="modal-header">
-    <h5 class="modal-title">
-      {{ 'child_bridge.bridge_settings' | translate }}: {{ plugin.displayName || plugin.name }}
-    </h5>
+    <h5 class="modal-title">{{ plugin.displayName || plugin.name }}</h5>
     @if (!justInstalled) {
     <button
       type="button"
@@ -17,204 +15,188 @@
     }
   </div>
   <div class="modal-body">
-    <p>
-      {{ 'child_bridge.about' | translate }}
-      <a
-        href="https://github.com/homebridge/homebridge/wiki/Child-Bridges"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="primary-text"
-      >
-        {{ 'child_bridge.wiki_link' | translate }}
-        <i class="fas fa-fw fa-external-link-alt"></i>
-      </a>
-    </p>
-    @if (configBlocks.length) {
-    <div>
-      <ul>
-        <li>{{ 'child_bridge.bridges_paired' | translate }}</li>
-        <li>{{ 'child_bridge.bridges_paired_2' | translate }}</li>
-      </ul>
-      <p>{{ 'child_bridge.select_type' | translate }}:</p>
+    <ul class="mb-3">
+      <li>
+        {{ 'child_bridge.about' | translate }}
+        <a
+          href="https://github.com/homebridge/homebridge/wiki/Child-Bridges"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="primary-text"
+        >
+          {{ 'child_bridge.wiki_link' | translate }}
+          <i class="fas fa-fw fa-external-link-alt"></i>
+        </a>
+      </li>
       @if (configBlocks.length) {
-      <ul class="list-group list-group-box my-2">
-        @for (item of configBlocks; track item; let i = $index) {
-        <li class="list-group-item">
-          <div class="d-flex justify-content-between align-items-center">
-            <h5 class="primary-text mb-0">
-              <strong>
-                {{ item.name || item.platform || item.accessory }} @if (item._bridge?.name) {
-                <span> - {{ item._bridge.name }}</span>
-                }
-              </strong>
-            </h5>
-            <input
-              type="checkbox"
-              class="rendux-input"
-              [id]="'toggleExternalBridgeInput_' + i"
-              (change)="toggleExternalBridge(item, enabledBlocks[i], i)"
-              [(ngModel)]="enabledBlocks[i]"
-            />
-            <label [for]="'toggleExternalBridgeInput_' + i" class="rendux-label"></label>
-          </div>
-          @if (item._bridge?.username) {
-          <div>
-            @if (deviceInfo[item._bridge?.username] === false) {
-            <div>
-              <ngb-alert type="info" [dismissible]="false" class="mt-3">
-                {{ 'child_bridge.restart_homebridge' | translate }}
-                <br />{{ 'child_bridge.return_to_pair' | translate }}
-              </ngb-alert>
-            </div>
-            } @if (deviceInfo[item._bridge?.username]) {
-            <div class="mt-3">
-              <div class="w-100 d-flex flex-column text-center">
-                <app-qrcode
-                  [data]="deviceInfo[item._bridge?.username]._setupCode"
-                  class="mx-auto my-2"
-                  style="width: 120px; height: 120px"
-                >
-                </app-qrcode>
-                <p class="mx-auto my-1">{{ deviceInfo[item._bridge?.username].pincode }}</p>
-                <p class="grey-text mx-auto small mb-1" style="max-width: 400px">
-                  <i
-                    class="fas fa-fw fa-link"
-                    [ngClass]="{
-                      'green-text': deviceInfo[item._bridge?.username]._isPaired,
-                      'red-text': !deviceInfo[item._bridge?.username]._isPaired
-                    }"
-                  ></i>
-                  {{ (deviceInfo[item._bridge?.username]._isPaired ? 'status.widget.qr_paired' :
-                  'status.widget.qr_unpaired') | translate }} @if (!deviceInfo[item._bridge?.username]._isPaired) {
-                  <span> &middot; {{ 'status.code_scan' | translate }} </span>
-                  }
-                </p>
-              </div>
-              @if ($settings.env.serviceMode) {
-              <div>
-                <div
-                  role="button"
-                  tabindex="0"
-                  [attr.aria-expanded]="showConfigFields[i] ? 'true' : 'false'"
-                  [attr.aria-controls]="'configFields_' + i"
-                  (click)="toggleConfigFields(i)"
-                  class="hover-pointer"
-                >
-                  <h5 class="primary-text">
-                    <i class="fa fa-fw" [ngClass]="showConfigFields[i] ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-                    {{ 'child_bridge.config.header' | translate }}
-                  </h5>
-                </div>
-                @if (showConfigFields[i]) {
-                <div [id]="'configFields_' + i">
-                  <div class="mb-3 grey-text">{{ 'child_bridge.config.description' | translate }}</div>
-                  <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
-                    <span class="pr-0 pr-lg-3" style="flex: 1">Username</span>
-                    <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
-                      <input
-                        class="form-control form-control-sm"
-                        type="text"
-                        [value]="item._bridge.username"
-                        disabled
-                      />
-                    </div>
-                  </div>
-                  <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
-                    <span class="pr-0 pr-lg-3" style="flex: 1">{{ 'child_bridge.config.name' | translate }}</span>
-                    <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
-                      <input class="form-control form-control-sm" type="text" [(ngModel)]="item._bridge.name" />
-                    </div>
-                  </div>
-                  <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
-                    <span class="pr-0 pr-lg-3" style="flex: 1"
-                      >{{ 'child_bridge.config.manufacturer' | translate }}</span
-                    >
-                    <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
-                      <input class="form-control form-control-sm" type="text" [(ngModel)]="item._bridge.manufacturer" />
-                    </div>
-                  </div>
-                  <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
-                    <span class="pr-0 pr-lg-3" style="flex: 1">{{ 'child_bridge.config.model' | translate }}</span>
-                    <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
-                      <input class="form-control form-control-sm" type="text" [(ngModel)]="item._bridge.model" />
-                    </div>
-                  </div>
-                  <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
-                    <span class="pr-0 pr-lg-3" style="flex: 1">{{ 'child_bridge.config.firmware' | translate }}</span>
-                    <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
-                      <input
-                        class="form-control form-control-sm"
-                        type="text"
-                        [(ngModel)]="item._bridge.firmwareRevision"
-                      />
-                    </div>
-                  </div>
-                  @if (canShowBridgeDebug) {
-                  <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
-                    <span>{{ 'child_bridge.config.debug' | translate }} <code>-D</code></span>
-                    <input
-                      type="checkbox"
-                      class="rendux-input"
-                      [id]="'homebridgeDebugMode_' + i"
-                      [(ngModel)]="item._bridge.debugModeEnabled"
-                      [attr.aria-label]="'settings.startup.debug' | translate"
-                    />
-                    <label [for]="'homebridgeDebugMode_' + i" class="rendux-label ml-3" style="min-width: 50px"></label>
-                  </div>
-                  }
-                  <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
-                    <span class="pr-0 pr-lg-3" style="flex: 1">
-                      <span class="text-monospace">DEBUG</span><br />
-                      <small class="grey-text">{{ 'settings.service.debug_tooltip' | translate }}</small>
-                    </span>
-                    <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
-                      <input
-                        class="form-control form-control-sm"
-                        type="text"
-                        [(ngModel)]="item._bridge.env.DEBUG"
-                        placeholder="HAP-NodeJS:Advertiser,HAP-NodeJS:Service"
-                      />
-                    </div>
-                  </div>
-                  <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
-                    <span class="pr-0 pr-lg-3" style="flex: 1">
-                      <span class="text-monospace">NODE_OPTIONS</span><br />
-                      <small class="grey-text">{{ 'settings.service.node_tooltip' | translate }}</small>
-                    </span>
-                    <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
-                      <input
-                        class="form-control form-control-sm"
-                        type="text"
-                        [(ngModel)]="item._bridge.env.NODE_OPTIONS"
-                        placeholder="--max-old-space-size=512 --max-http-header-size=8192"
-                      />
-                    </div>
-                  </div>
-                </div>
-                }
-              </div>
+      <li>{{ 'child_bridge.bridges_paired' | translate }}</li>
+      @if (configBlocks.length === 1 && deviceInfo[configBlocks[0]._bridge?.username] === false) {
+      <li>{{ 'child_bridge.bridges_paired_2' | translate }}</li>
+      }
+      <li>{{ 'child_bridge.select_type' | translate }}:</li>
+      }
+    </ul>
+    @if (configBlocks.length) {
+    <ul class="list-group list-group-box mb-0">
+      @for (item of configBlocks; track item; let i = $index) {
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="primary-text mb-0">
+            <strong>
+              {{ item.name || item.platform || item.accessory }} @if (item._bridge?.name) {
+              <span> - {{ item._bridge.name }}</span>
               }
+            </strong>
+          </h5>
+          <input
+            type="checkbox"
+            class="rendux-input"
+            [id]="'toggleExternalBridgeInput_' + i"
+            (change)="toggleExternalBridge(item, enabledBlocks[i], i)"
+            [(ngModel)]="enabledBlocks[i]"
+          />
+          <label [for]="'toggleExternalBridgeInput_' + i" class="rendux-label"></label>
+        </div>
+        @if (item._bridge?.username) { @if (deviceInfo[item._bridge?.username] === false) {
+        <ngb-alert type="info" [dismissible]="false" class="mt-3">
+          {{ 'child_bridge.restart_homebridge' | translate }}
+          <br />{{ 'child_bridge.return_to_pair' | translate }}
+        </ngb-alert>
+        } @if (deviceInfo[item._bridge?.username]) {
+        <div class="mt-3">
+          <div class="w-100 d-flex flex-column text-center">
+            <app-qrcode
+              [data]="deviceInfo[item._bridge?.username]._setupCode"
+              class="mx-auto my-2"
+              style="width: 120px; height: 120px"
+            >
+            </app-qrcode>
+            <p class="mx-auto my-1">{{ deviceInfo[item._bridge?.username].pincode }}</p>
+            <p class="grey-text mx-auto small mb-1" style="max-width: 400px">
+              <i
+                class="fas fa-fw fa-link"
+                [ngClass]="{
+                      'green-text': deviceInfo[item._bridge?.username]._isPaired,
+                      'grey-text': !deviceInfo[item._bridge?.username]._isPaired
+                    }"
+              ></i>
+              {{ (deviceInfo[item._bridge?.username]._isPaired ? 'status.widget.qr_paired' :
+              'status.widget.qr_unpaired') | translate }} @if (!deviceInfo[item._bridge?.username]._isPaired) {
+              <span> &middot; {{ 'status.code_scan' | translate }} </span>
+              }
+            </p>
+          </div>
+          @if ($settings.env.serviceMode) {
+          <div
+            role="button"
+            tabindex="0"
+            [attr.aria-expanded]="showConfigFields[i] ? 'true' : 'false'"
+            [attr.aria-controls]="'configFields_' + i"
+            (click)="toggleConfigFields(i)"
+            class="hover-pointer"
+          >
+            <h5 class="primary-text">
+              <i class="fa fa-fw" [ngClass]="showConfigFields[i] ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+              {{ 'child_bridge.config.header' | translate }}
+            </h5>
+          </div>
+          @if (showConfigFields[i]) {
+          <div [id]="'configFields_' + i">
+            <div class="mb-3 grey-text">{{ 'child_bridge.config.description' | translate }}</div>
+            <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+              <span class="pr-0 pr-lg-3" style="flex: 1">Username</span>
+              <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
+                <input class="form-control form-control-sm" type="text" [value]="item._bridge.username" disabled />
+              </div>
+            </div>
+            <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+              <span class="pr-0 pr-lg-3" style="flex: 1">{{ 'child_bridge.config.name' | translate }}</span>
+              <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
+                <input class="form-control form-control-sm" type="text" [(ngModel)]="item._bridge.name" />
+              </div>
+            </div>
+            <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+              <span class="pr-0 pr-lg-3" style="flex: 1">{{ 'child_bridge.config.manufacturer' | translate }}</span>
+              <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
+                <input class="form-control form-control-sm" type="text" [(ngModel)]="item._bridge.manufacturer" />
+              </div>
+            </div>
+            <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+              <span class="pr-0 pr-lg-3" style="flex: 1">{{ 'child_bridge.config.model' | translate }}</span>
+              <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
+                <input class="form-control form-control-sm" type="text" [(ngModel)]="item._bridge.model" />
+              </div>
+            </div>
+            <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+              <span class="pr-0 pr-lg-3" style="flex: 1">{{ 'child_bridge.config.firmware' | translate }}</span>
+              <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
+                <input class="form-control form-control-sm" type="text" [(ngModel)]="item._bridge.firmwareRevision" />
+              </div>
+            </div>
+            @if (canShowBridgeDebug) {
+            <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+              <span>{{ 'child_bridge.config.debug' | translate }} <code>-D</code></span>
+              <input
+                type="checkbox"
+                class="rendux-input"
+                [id]="'homebridgeDebugMode_' + i"
+                [(ngModel)]="item._bridge.debugModeEnabled"
+                [attr.aria-label]="'settings.startup.debug' | translate"
+              />
+              <label [for]="'homebridgeDebugMode_' + i" class="rendux-label ml-3" style="min-width: 50px"></label>
             </div>
             }
+            <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+              <span class="pr-0 pr-lg-3" style="flex: 1">
+                <span class="text-monospace">DEBUG</span><br />
+                <small class="grey-text">{{ 'settings.service.debug_tooltip' | translate }}</small>
+              </span>
+              <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  [(ngModel)]="item._bridge.env.DEBUG"
+                  placeholder="HAP-NodeJS:Advertiser,HAP-NodeJS:Service"
+                />
+              </div>
+            </div>
+            <div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+              <span class="pr-0 pr-lg-3" style="flex: 1">
+                <span class="text-monospace">NODE_OPTIONS</span><br />
+                <small class="grey-text">{{ 'settings.service.node_tooltip' | translate }}</small>
+              </span>
+              <div class="my-lg-0 pl-0 pl-lg-3" style="flex: 1">
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  [(ngModel)]="item._bridge.env.NODE_OPTIONS"
+                  placeholder="--max-old-space-size=512 --max-http-header-size=8192"
+                />
+              </div>
+            </div>
           </div>
-          }
-        </li>
-        }
-      </ul>
+          } }
+        </div>
+        } }
+      </li>
       }
-    </div>
-    @if (deleteBridges.length) {
+    </ul>
+    } @if (deleteBridges.length && $settings.env.serviceMode) {
     <ngb-alert type="error" [dismissible]="false" class="mt-4 mb-0">
       <p>{{ 'child_bridge.confirm_delete' | translate }}</p>
       <div class="text-center">
         <ul class="d-inline-block text-left mb-0">
           @for (bridge of deleteBridges; track bridge) {
-          <li>{{ bridge.bridgeName || this.deviceInfo[bridge.id]?.displayName }} (<code>{{ bridge.id }}</code>)</li>
+          <li>
+            {{ bridge.bridgeName || this.deviceInfo[bridge.id]?.displayName }} (<span class="text-monospace"
+              >{{ bridge.id }}</span
+            >)
+          </li>
           }
         </ul>
       </div>
     </ngb-alert>
-    } } @if (!configBlocks.length && canConfigure) {
+    } @if (!configBlocks.length && canConfigure) {
     <ngb-alert type="info" [dismissible]="false"> {{ 'child_bridge.must_configure_plugin' | translate }} </ngb-alert>
     } @if (!canConfigure) {
     <div class="mb-2">
@@ -246,33 +228,25 @@
     </div>
     <div class="text-center">
       @if (justInstalled) {
-      <div>
-        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saveInProgress">
-          {{ 'form.button_save' | translate }} @if (saveInProgress) {
-          <i class="fas fa-fw fa-spinner fa-pulse"></i>
-          }
-        </button>
-      </div>
+      <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saveInProgress">
+        {{ 'form.button_save' | translate }} @if (saveInProgress) {
+        <i class="fas fa-fw fa-spinner fa-pulse"></i>
+        }
+      </button>
       }
     </div>
     <div class="text-right">
-      @if (!justInstalled) {
-      <div>
-        @if (configBlocks.length) {
-        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saveInProgress">
-          @if (!saveInProgress) {
-          <span>{{ 'form.button_save' | translate }}</span>
-          } @if (saveInProgress) {
-          <i class="fas fa-fw fa-spinner fa-pulse"></i>
-          }
-        </button>
-        } @if (!configBlocks.length) {
-        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="openPluginConfig()">
-          {{ 'plugins.button_settings' | translate }}
-        </button>
+      @if (!justInstalled) { @if (configBlocks.length) {
+      <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saveInProgress">
+        @if (!saveInProgress) { {{ 'form.button_save' | translate }} } @if (saveInProgress) {
+        <i class="fas fa-fw fa-spinner fa-pulse"></i>
         }
-      </div>
-      }
+      </button>
+      } @if (!configBlocks.length) {
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="openPluginConfig()">
+        {{ 'plugins.button_settings' | translate }}
+      </button>
+      } }
     </div>
   </div>
 </div>

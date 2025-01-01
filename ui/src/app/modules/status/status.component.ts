@@ -40,6 +40,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   public options: GridsterConfig
   public dashboard: Array<GridsterItem> = []
   public consoleStatus: 'up' | 'down' = 'down'
+  public currentYear: number
   public page = {
     mobile: (window.innerWidth < 1024),
   }
@@ -49,6 +50,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit() {
+    this.currentYear = new Date().getFullYear()
     this.io = this.$ws.connectToNamespace('status')
     this.options = {
       mobileBreakpoint: 1023,
