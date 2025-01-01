@@ -74,11 +74,11 @@ export class PluginsSettingsUiService {
       } else if (fallbackPath.match(/^.*\.(jpe?g|gif|png|svg|ttf|woff2|css)$/i) && await pathExists(fallbackPath)) {
         return reply.sendFile(basename(fallbackPath), dirname(fallbackPath))
       } else {
-        this.loggerService.warn('Asset Not Found:', `${pluginName}/${assetPath}`)
+        this.loggerService.warn(`[${pluginName}] asset not found: ${assetPath}.`)
         return reply.code(404).send('Not Found')
       }
     } catch (e) {
-      this.loggerService.error(`[${pluginName}]`, e.message)
+      this.loggerService.error(`[${pluginName}] UI threw an error - ${e.message}.`)
       return e.message === 'Not Found' ? reply.code(404).send(e.message) : reply.code(500).send(e.message)
     }
   }
@@ -93,7 +93,7 @@ export class PluginsSettingsUiService {
       this.pluginUiLastVersionCache.set(pluginName, pluginUi.plugin.installedVersion)
       return pluginUi
     } catch (e) {
-      this.loggerService.warn(`[${pluginName}] Custom UI:`, e.message)
+      this.loggerService.warn(`[${pluginName}] custom UI threw an error - ${e.message}.`)
       throw new NotFoundException()
     }
   }
@@ -183,15 +183,15 @@ export class PluginsSettingsUiService {
     })
 
     child.stdout.on('data', (data) => {
-      this.loggerService.log(`[${pluginName}]`, data.toString().trim())
+      this.loggerService.log(`[${pluginName}] ${data.toString().trim()}`)
     })
 
     child.stderr.on('data', (data) => {
-      this.loggerService.error(`[${pluginName}]`, data.toString().trim())
+      this.loggerService.error(`[${pluginName}] ${data.toString().trim()}`)
     })
 
     child.on('exit', () => {
-      this.loggerService.debug(`[${pluginName}]`, 'Custom UI: closed (child process ended)')
+      this.loggerService.debug(`[${pluginName}] custom UI closed (child process ended).`)
     })
 
     child.addListener('message', (response: { action: string, payload: any }) => {
@@ -203,7 +203,7 @@ export class PluginsSettingsUiService {
 
     // function to handle cleanup
     const cleanup = () => {
-      this.loggerService.debug(`[${pluginName}]`, 'Custom UI: closing (terminating child process)...')
+      this.loggerService.debug(`[${pluginName}] custom UI closing (terminating child process)...`)
 
       const childPid = child.pid
       if (child.connected) {

@@ -90,11 +90,12 @@ export class SidebarComponent implements OnInit {
       }, { passive: false })
     } else {
       // Expand sidebar on mouseenter
-      sidebar.addEventListener('mouseenter', () => this.openSidebar(), { passive: false })
-      mobileHeader.addEventListener('mouseenter', () => this.openSidebar(), { passive: false })
+      if (this.$settings.menuMode !== 'freeze') {
+        sidebar.addEventListener('mouseenter', () => this.openSidebar(), { passive: false })
+        sidebar.addEventListener('mouseleave', () => this.closeSidebar(), { passive: false })
+      }
 
-      // Collapse sidebar on mouseleave
-      sidebar.addEventListener('mouseleave', () => this.closeSidebar(), { passive: false })
+      mobileHeader.addEventListener('mouseenter', () => this.openSidebar(), { passive: false })
       mobileHeader.addEventListener('mouseleave', () => this.closeSidebar(), { passive: false })
 
       document.addEventListener('click', (e: MouseEvent) => {

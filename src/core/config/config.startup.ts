@@ -53,7 +53,7 @@ export async function getStartupConfig() {
     for (const attribute of ['key', 'cert', 'pfx']) {
       if (ui.ssl[attribute]) {
         if (!(await (stat(ui.ssl[attribute]))).isFile()) {
-          logger.error(`SSL Config Error: ui.ssl.${attribute}: ${ui.ssl[attribute]} is not a valid file`)
+          logger.error(`SSL config error: ui.ssl.${attribute}: ${ui.ssl[attribute]} is not a valid file.`)
         }
       }
     }
@@ -66,7 +66,7 @@ export async function getStartupConfig() {
         passphrase: ui.ssl.passphrase,
       }
     } catch (e) {
-      logger.error('WARNING: COULD NOT START SERVER WITH SSL ENABLED')
+      logger.error(`Could not start server with SSL enabled as ${e.message}.`)
       logger.error(e)
     }
   }

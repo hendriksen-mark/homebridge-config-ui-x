@@ -2,10 +2,9 @@ import { inject, Injectable } from '@angular/core'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { firstValueFrom } from 'rxjs'
 
+import { ApiService } from '@/app/core/api.service'
 import { CustomPluginsComponent } from '@/app/core/manage-plugins/custom-plugins/custom-plugins.component'
 import { HomebridgeGoogleSmarthomeComponent } from '@/app/core/manage-plugins/custom-plugins/homebridge-google-smarthome/homebridge-google-smarthome.component'
-
-import { ApiService } from '../../api.service'
 
 @Injectable({
   providedIn: 'root',
