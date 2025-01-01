@@ -129,6 +129,18 @@ export class PluginsService {
   }
 
   /**
+   * Assign a display name to a plugin
+   * @param plugin
+   * @private
+   */
+  private fixDisplayName(plugin: HomebridgePlugin): HomebridgePlugin {
+    plugin.displayName = plugin.displayName || (plugin.name.charAt(0) === '@' ? plugin.name.split('/')[1] : plugin.name)
+      .replace(/-/g, ' ')
+      .replace(/\w\S*/g, (txt: string) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase())
+    return plugin
+  }
+
+  /**
    * Return an array of plugins currently installed
    */
   public async getInstalledPlugins(): Promise<HomebridgePlugin[]> {
@@ -165,13 +177,13 @@ export class PluginsService {
             }
           }
         } catch (e) {
-          this.logger.error(`Failed to parse plugin "${pkg.name}": ${e.message}`)
+          this.logger.error(`Failed to parse plugin ${pkg.name} as ${e.message}.`)
         }
       })
     }))
 
-    this.installedPlugins = plugins
-    return plugins
+    this.installedPlugins = plugins.map(plugin => this.fixDisplayName(plugin))
+    return this.installedPlugins
   }
 
   /**
@@ -256,8 +268,8 @@ export class PluginsService {
     try {
       searchResults = (await firstValueFrom(this.httpService.get(`https://registry.npmjs.org/-/v1/search?text=${q}`))).data
     } catch (e) {
-      this.logger.error(`Failed to search the npm registry - "${e.message}" - see https://homebridge.io/w/JJSz6 for help.`)
-      throw new InternalServerErrorException(`Failed to search the npm registry - "${e.message}" - see logs.`)
+      this.logger.error(`Failed to search the npm registry (see https://homebridge.io/w/JJSz6 for help) as ${e.message}.`)
+      throw new InternalServerErrorException(`Failed to search the npm registry as ${e.message}, see logs.`)
     }
 
     const result: HomebridgePlugin[] = searchResults.objects
@@ -332,7 +344,9 @@ export class PluginsService {
       }
     })
 
-    return orderBy([...exactMatchPlugins, ...partialMatchPlugins], ['verifiedPlusPlugin', 'verifiedPlugin'], ['desc', 'desc']).slice(0, 30)
+    return orderBy([...exactMatchPlugins, ...partialMatchPlugins], ['verifiedPlusPlugin', 'verifiedPlugin'], ['desc', 'desc'])
+      .slice(0, 30)
+      .map(plugin => this.fixDisplayName(plugin))
   }
 
   /**
@@ -408,7 +422,7 @@ export class PluginsService {
       return [plugin]
     } catch (e) {
       if (e.response?.status !== 404) {
-        this.logger.error(`Failed to search the npm registry - "${e.message}" - see https://homebridge.io/w/JJSz6 for help.`)
+        this.logger.error(`Failed to search the npm registry (see https://homebridge.io/w/JJSz6 for help) as ${e.message}.`)
       }
       return []
     }
@@ -552,7 +566,7 @@ export class PluginsService {
       if (await pathExists(pkgJsonPath)) {
         return await this.parsePackageJson(await readJson(pkgJsonPath), this.configService.ui.homebridgePackagePath)
       } else {
-        this.logger.error(`"homebridgePath" (${this.configService.ui.homebridgePackagePath}) does not exist`)
+        this.logger.error(`The Homebridge path ${this.configService.ui.homebridgePackagePath} does not exist.`)
       }
     }
 
@@ -561,7 +575,7 @@ export class PluginsService {
     const homebridgeInstalls = modules.filter(x => x.name === 'homebridge')
 
     if (homebridgeInstalls.length > 1) {
-      this.logger.warn('Multiple Instances Of Homebridge Found Installed - see https://homebridge.io/w/JJSgm for help.')
+      this.logger.warn('Multiple instances of Homebridge were found, see https://homebridge.io/w/JJSgm for help.')
       homebridgeInstalls.forEach((instance) => {
         this.logger.warn(instance.installPath)
       })
@@ -569,8 +583,8 @@ export class PluginsService {
 
     if (!homebridgeInstalls.length) {
       this.configService.hbServiceUiRestartRequired = true
-      this.logger.error('Unable To Find Homebridge Installation - see https://homebridge.io/w/JJSgZ for help.')
-      throw new Error('Unable To Find Homebridge Installation')
+      this.logger.error('Unable to find Homebridge installation, see https://homebridge.io/w/JJSgZ for help.')
+      throw new Error('Unable To Find Homebridge Installation.')
     }
 
     const homebridgeModule = homebridgeInstalls[0]
@@ -740,7 +754,7 @@ export class PluginsService {
           return withoutV
         }
       } catch (e) {
-        this.logger.error(`Failed to check for bundled update: ${e.message}`)
+        this.logger.error(`Failed to check for bundled update as ${e.message}.`)
         return ''
       }
     } else {
@@ -811,13 +825,13 @@ export class PluginsService {
     // check to see if this plugin implements dynamic schemas
     if (configSchema.dynamicSchemaVersion) {
       const dynamicSchemaPath = resolve(this.configService.storagePath, `.${pluginName}-v${configSchema.dynamicSchemaVersion}.schema.json`)
-      this.logger.log(`[${pluginName}] dynamic schema path: ${dynamicSchemaPath}`)
+      this.logger.log(`[${pluginName}] dynamic schema path: ${dynamicSchemaPath}.`)
       if (existsSync(dynamicSchemaPath)) {
         try {
           configSchema = await readJson(dynamicSchemaPath)
-          this.logger.log(`[${pluginName}] dynamic schema loaded from: ${dynamicSchemaPath}`)
+          this.logger.log(`[${pluginName}] dynamic schema loaded from ${dynamicSchemaPath}.`)
         } catch (e) {
-          this.logger.error(`[${pluginName}] Failed to load dynamic schema at ${dynamicSchemaPath}: ${e.message}`)
+          this.logger.error(`[${pluginName}] failed to load dynamic schema from ${dynamicSchemaPath} as ${e.message}.`)
         }
       }
     }
@@ -976,7 +990,7 @@ export class PluginsService {
             .find((b: any) => b.name.startsWith(`${tag}-`))
             ?.name
         } catch (e) {
-          this.logger.error(`Failed to get list of branches from GitHub: ${e.message}`)
+          this.logger.error(`Failed to get list of branches from GitHub as ${e.message}.`)
         }
       }
 
@@ -1055,7 +1069,7 @@ export class PluginsService {
           })
         })
       } catch (e) {
-        this.logger.debug('Failed to extract plugin alias:', e)
+        this.logger.debug(`Failed to extract ${pluginName} plugin alias as ${e.message}.`)
         // fallback to the manual list, if defined for this plugin
         if (this.pluginAliasHints[pluginName]) {
           output.pluginAlias = this.pluginAliasHints[pluginName].pluginAlias
@@ -1166,7 +1180,7 @@ export class PluginsService {
             })
           }
         } catch (e) {
-          this.logger.log(`Failed to parse item "${module}" in ${requiredPath}: ${e.message}`)
+          this.logger.log(`Failed to parse ${module} in ${requiredPath} as ${e.message}.`)
         }
       }
     }
@@ -1216,8 +1230,8 @@ export class PluginsService {
       if (windowsNpmPath.length) {
         return [windowsNpmPath[0]]
       } else {
-        this.logger.error('ERROR: Cannot find npm binary. You will not be able to manage plugins or update homebridge.')
-        this.logger.error('ERROR: You might be able to fix this problem by running: npm install -g npm')
+        this.logger.error('Cannot find npm binary, you will not be able to manage plugins or update Homebridge. You might be able to fix this problem by running:')
+        this.logger.error('npm install -g npm')
       }
     }
     // Linux and macOS don't require the full path to npm / pnpm
@@ -1378,7 +1392,7 @@ export class PluginsService {
       || ((pkg.maintainers && pkg.maintainers.length) ? pkg.maintainers[0].name : null)
     } catch (e) {
       if (e.response?.status !== 404) {
-        this.logger.log(`[${plugin.name}] Failed to check registry.npmjs.org for updates: "${e.message}" - see https://homebridge.io/w/JJSz6 for help.`)
+        this.logger.log(`[${plugin.name}] failed to check registry.npmjs.org for updates (see https://homebridge.io/w/JJSz6 for help) as ${e.message}.`)
       }
       plugin.publicPackage = false
       plugin.latestVersion = null
@@ -1433,7 +1447,7 @@ export class PluginsService {
       }
     }
 
-    this.logger.log(`Running Command: ${command.join(' ')}`)
+    this.logger.log(`Running command ${command.join(' ')}.`)
 
     if (!satisfies(process.version, `>=${this.configService.minimumNodeVersion}`)) {
       client.emit('stdout', yellow(`Node.js v${this.configService.minimumNodeVersion} higher is required for ${this.configService.name}.\n\r`))
@@ -1519,12 +1533,11 @@ export class PluginsService {
     }
 
     if (!await pathExists(this.configService.customPluginPath)) {
-      this.logger.warn(`Custom plugin directory was removed. Re-creating: ${this.configService.customPluginPath}`)
+      this.logger.warn(`Custom plugin directory was removed, re-creating ${this.configService.customPluginPath}.`)
       try {
         await ensureDir(this.configService.customPluginPath)
       } catch (e) {
-        this.logger.error('Failed to recreate custom plugin directory')
-        this.logger.error(e.message)
+        this.logger.error(`Failed to re-create custom plugin directory as ${e.message}.`)
       }
     }
   }
@@ -1544,7 +1557,7 @@ export class PluginsService {
         await remove(offendingPath)
       }
     } catch (e) {
-      this.logger.error(`Failed to remove ${offendingPath}`, e.message)
+      this.logger.error(`Failed to remove ${offendingPath} as ${e.message}.`)
     }
   }
 
@@ -1563,7 +1576,7 @@ export class PluginsService {
       const child = spawn(command.shift(), command)
 
       child.on('exit', (code) => {
-        this.logger.log('npm cache clear command executed with exit code', code)
+        this.logger.log(`Executed npm cache clear command with exit code ${code}.`)
         res(null)
       })
 
@@ -1622,7 +1635,7 @@ export class PluginsService {
     } catch (e) {
       // Try again in 60 seconds
       this.pluginListRetryTimeout = setTimeout(() => this.loadPluginList(), 60000)
-      this.logger.debug('Error when trying to get github plugin list:', e.message)
+      this.logger.debug(`Could not obtain plugin list from plugins repo as ${e.message}.`)
     }
   }
 }

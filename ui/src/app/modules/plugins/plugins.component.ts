@@ -6,12 +6,11 @@ import { ToastrService } from 'ngx-toastr'
 import { firstValueFrom, Subscription } from 'rxjs'
 
 import { ApiService } from '@/app/core/api.service'
+import { SpinnerComponent } from '@/app/core/components/spinner/spinner.component'
 import { ManagePluginsService } from '@/app/core/manage-plugins/manage-plugins.service'
 import { SettingsService } from '@/app/core/settings.service'
 import { IoNamespace, WsService } from '@/app/core/ws.service'
-
-import { SpinnerComponent } from '../../core/components/spinner/spinner.component'
-import { PluginCardComponent } from './plugin-card/plugin-card.component'
+import { PluginCardComponent } from '@/app/modules/plugins/plugin-card/plugin-card.component'
 
 @Component({
   templateUrl: './plugins.component.html',

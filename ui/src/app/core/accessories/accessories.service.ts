@@ -8,9 +8,8 @@ import { firstValueFrom, Subject } from 'rxjs'
 
 import { ServiceTypeX } from '@/app/core/accessories/accessories.interfaces'
 import { AccessoryInfoComponent } from '@/app/core/accessories/accessory-info/accessory-info.component'
-
-import { AuthService } from '../auth/auth.service'
-import { IoNamespace, WsService } from '../ws.service'
+import { AuthService } from '@/app/core/auth/auth.service'
+import { IoNamespace, WsService } from '@/app/core/ws.service'
 
 @Injectable({
   providedIn: 'root',

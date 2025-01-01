@@ -31,13 +31,14 @@ export class ManagePluginsService {
 
   constructor() {}
 
-  installPlugin(pluginName: string, targetVersion = 'latest') {
+  installPlugin(plugin: any, targetVersion = 'latest') {
     const ref = this.$modal.open(ManagePluginComponent, {
       size: 'lg',
       backdrop: 'static',
     })
     ref.componentInstance.action = 'Install'
-    ref.componentInstance.pluginName = pluginName
+    ref.componentInstance.pluginName = plugin.name
+    ref.componentInstance.pluginDisplayName = plugin.displayName
     ref.componentInstance.targetVersion = targetVersion
   }
 
@@ -66,6 +67,7 @@ export class ManagePluginsService {
     })
     ref.componentInstance.action = 'Update'
     ref.componentInstance.pluginName = plugin.name
+    ref.componentInstance.pluginDisplayName = plugin.displayName
     ref.componentInstance.targetVersion = targetVersion
     ref.componentInstance.latestVersion = plugin.latestVersion
     ref.componentInstance.installedVersion = plugin.installedVersion
@@ -83,6 +85,7 @@ export class ManagePluginsService {
     })
     ref.componentInstance.action = 'Update'
     ref.componentInstance.pluginName = homebridgePkg.name
+    ref.componentInstance.pluginDisplayName = homebridgePkg.displayName
     ref.componentInstance.targetVersion = targetVersion
     ref.componentInstance.latestVersion = homebridgePkg.latestVersion
     ref.componentInstance.installedVersion = homebridgePkg.installedVersion
@@ -114,7 +117,7 @@ export class ManagePluginsService {
 
       return plugin.installedVersion
         ? await this.updatePlugin(plugin, version)
-        : this.installPlugin(plugin.name, version)
+        : this.installPlugin(plugin, version)
     } catch (e) {
       // do nothing
     }

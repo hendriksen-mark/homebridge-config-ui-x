@@ -10,9 +10,8 @@ import { AuthService } from '@/app/core/auth/auth.service'
 import { ConfirmComponent } from '@/app/core/components/confirm/confirm.component'
 import { SettingsService } from '@/app/core/settings.service'
 import { IoNamespace, WsService } from '@/app/core/ws.service'
+import { SidebarComponent } from '@/app/shared/layout/sidebar/sidebar.component'
 import { environment } from '@/environments/environment'
-
-import { SidebarComponent } from './sidebar/sidebar.component'
 
 @Component({
   selector: 'app-layout',
