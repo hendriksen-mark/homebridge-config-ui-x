@@ -14,11 +14,11 @@ import { SettingsService } from '@/app/core/settings.service'
 import { BackupComponent } from '@/app/modules/settings/backup/backup.component'
 import { RemoveAllAccessoriesComponent } from '@/app/modules/settings/remove-all-accessories/remove-all-accessories.component'
 import { RemoveBridgeAccessoriesComponent } from '@/app/modules/settings/remove-bridge-accessories/remove-bridge-accessories.component'
-import { RemoveSingleAccessoryComponent } from '@/app/modules/settings/remove-single-accessory/remove-single-accessory.component'
+import { RemoveIndividualAccessoriesComponent } from '@/app/modules/settings/remove-individual-accessories/remove-individual-accessories.component'
+import { ResetAllBridgesComponent } from '@/app/modules/settings/reset-all-bridges/reset-all-bridges.component'
+import { ResetIndividualBridgesComponent } from '@/app/modules/settings/reset-individual-bridges/reset-individual-bridges.component'
 import { RestoreComponent } from '@/app/modules/settings/restore/restore.component'
 import { SelectNetworkInterfacesComponent } from '@/app/modules/settings/select-network-interfaces/select-network-interfaces.component'
-import { UnpairAllBridgesComponent } from '@/app/modules/settings/unpair-all-bridges/unpair-all-bridges.component'
-import { UnpairSingleBridgeComponent } from '@/app/modules/settings/unpair-single-bridge/unpair-single-bridge.component'
 
 @Component({
   templateUrl: './settings.component.html',
@@ -95,6 +95,9 @@ export class SettingsComponent implements OnInit {
     reset: true,
     cache: true,
   }
+
+  public readonly file = '<span class="text-monospace">ui-wallpaper.jpg</span>'
+  public readonly linkDebug = '<a href="https://github.com/homebridge/homebridge-config-ui-x/wiki/Debug-Common-Values" target="_blank"><i class="fa fa-fw fa-external-link-alt"></i></a>'
 
   constructor() {}
 
@@ -221,14 +224,14 @@ export class SettingsComponent implements OnInit {
   }
 
   resetHomebridgeState() {
-    this.$modal.open(UnpairAllBridgesComponent, {
+    this.$modal.open(ResetAllBridgesComponent, {
       size: 'lg',
       backdrop: 'static',
     })
   }
 
   unpairAccessory() {
-    this.$modal.open(UnpairSingleBridgeComponent, {
+    this.$modal.open(ResetIndividualBridgesComponent, {
       size: 'lg',
       backdrop: 'static',
     })
@@ -242,7 +245,7 @@ export class SettingsComponent implements OnInit {
   }
 
   removeSingleCachedAccessories() {
-    this.$modal.open(RemoveSingleAccessoryComponent, {
+    this.$modal.open(RemoveIndividualAccessoriesComponent, {
       size: 'lg',
       backdrop: 'static',
     })
