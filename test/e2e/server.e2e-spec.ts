@@ -272,6 +272,9 @@ describe('ServerController (e2e)', () => {
   })
 
   it('DELETE /server/pairings/:deviceId', async () => {
+    // enable service mode
+    configService.serviceMode = true
+
     const res = await app.inject({
       method: 'DELETE',
       path: '/server/pairings/67E41F0EA05D',

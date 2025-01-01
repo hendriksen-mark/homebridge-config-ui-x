@@ -8,14 +8,15 @@ import { firstValueFrom, Subject } from 'rxjs'
 
 import { ServiceTypeX } from '@/app/core/accessories/accessories.interfaces'
 import { AccessoryInfoComponent } from '@/app/core/accessories/accessory-info/accessory-info.component'
-
-import { AuthService } from '../auth/auth.service'
-import { IoNamespace, WsService } from '../ws.service'
+import { ApiService } from '@/app/core/api.service'
+import { AuthService } from '@/app/core/auth/auth.service'
+import { IoNamespace, WsService } from '@/app/core/ws.service'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccessoriesService {
+  private $api = inject(ApiService)
   private $auth = inject(AuthService)
   private $modal = inject(NgbModal)
   private $toastr = inject(ToastrService)
@@ -47,7 +48,21 @@ export class AccessoriesService {
     'ProtocolInformation',
   ]
 
-  constructor() {}
+  private accessoryCache: any[] = []
+  private pairingCache: any[] = []
+
+  constructor() {
+    firstValueFrom(this.$api.get('/server/cached-accessories'))
+      .then((data) => {
+        this.accessoryCache = data
+      })
+      .catch(error => console.error(error))
+    firstValueFrom(this.$api.get('/server/pairings'))
+      .then((data) => {
+        this.pairingCache = data
+      })
+      .catch(error => console.error(error))
+  }
 
   /**
    *
@@ -59,6 +74,8 @@ export class AccessoriesService {
     })
 
     ref.componentInstance.service = service
+    ref.componentInstance.accessoryCache = this.accessoryCache
+    ref.componentInstance.pairingCache = this.pairingCache
 
     ref.result
       .then(() => this.saveLayout())
