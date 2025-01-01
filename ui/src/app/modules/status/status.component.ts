@@ -5,6 +5,7 @@ import { GridsterComponent, GridsterConfig, GridsterItem, GridsterItemComponent 
 import { firstValueFrom, Subject } from 'rxjs'
 import { take } from 'rxjs/operators'
 
+import { SpinnerComponent } from '@/app//core/components/spinner/spinner.component'
 import { AuthService } from '@/app/core/auth/auth.service'
 import { NotificationService } from '@/app/core/notification.service'
 import { SettingsService } from '@/app/core/settings.service'
@@ -12,9 +13,7 @@ import { IoNamespace, WsService } from '@/app/core/ws.service'
 import { CreditsComponent } from '@/app/modules/status/credits/credits.component'
 import { WidgetControlComponent } from '@/app/modules/status/widget-control/widget-control.component'
 import { WidgetVisibilityComponent } from '@/app/modules/status/widget-visibility/widget-visibility.component'
-
-import { SpinnerComponent } from '../../core/components/spinner/spinner.component'
-import { WidgetsComponent } from './widgets/widgets.component'
+import { WidgetsComponent } from '@/app/modules/status/widgets/widgets.component'
 
 @Component({
   templateUrl: './status.component.html',
@@ -40,6 +39,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   public options: GridsterConfig
   public dashboard: Array<GridsterItem> = []
   public consoleStatus: 'up' | 'down' = 'down'
+  public currentYear: number
   public page = {
     mobile: (window.innerWidth < 1024),
   }
@@ -49,6 +49,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit() {
+    this.currentYear = new Date().getFullYear()
     this.io = this.$ws.connectToNamespace('status')
     this.options = {
       mobileBreakpoint: 1023,
@@ -283,6 +284,11 @@ export class StatusComponent implements OnInit, OnDestroy {
       .then(() => {
         this.gridChangedEvent()
         item.$configureEvent.next(undefined)
+
+        // Some need a refresh after configuration to take effect
+        if (['CpuWidgetComponent', 'MemoryWidgetComponent', 'NetworkWidgetComponent'].includes(item.component)) {
+          window.location.reload()
+        }
       })
       .catch(() => {
         // modal closed
