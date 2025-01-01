@@ -165,7 +165,7 @@ export class StatusService {
         max: cpuTemp,
       }
     } catch (e) {
-      this.logger.error(`Failed to read temp from ${this.configService.ui.temp} - ${e.message}`)
+      this.logger.error(`Failed to read temp from ${this.configService.ui.temp} as ${e.message}.`)
       return this.getCpuTempAlt()
     }
   }
@@ -421,7 +421,7 @@ export class StatusService {
       this.statusCache.set('glibcVersion', glibcVersion, 86400)
       return glibcVersion
     } catch (e) {
-      this.logger.debug('Could not check glibc version:', e.message)
+      this.logger.debug(`Could not check glibc version as ${e.message}.`)
       return ''
     }
   }
@@ -557,7 +557,7 @@ export class StatusService {
       this.statusCache.set('nodeJsVersion', versionInformation, 86400)
       return versionInformation
     } catch (e) {
-      this.logger.log('Failed to check for Node.js version updates - check your internet connection.')
+      this.logger.log(`Failed to check for Node.js version updates (check your internet connection) as ${e.message}.`)
       const versionInformation = {
         currentVersion: process.version,
         latestVersion: process.version,
@@ -594,7 +594,7 @@ export class StatusService {
         }
       }
     } catch (e) {
-      this.logger.debug('Could not check vcgencmd get_throttled:', e.message)
+      this.logger.debug(`Could not check vcgencmd get_throttled as ${e.message}.`)
     }
 
     return output
