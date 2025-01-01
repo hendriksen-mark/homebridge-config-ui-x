@@ -11,6 +11,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 - implement and allow switching to scoped plugins
 - merge plugin info and verified modals
 - consistent formatting of child bridge names across the ui
+- improvements to settings accessories and bridges sections
 
 ### Other Changes
 

@@ -14,19 +14,17 @@
   </div>
   @if (!restoreStarted && !setupWizardRestore) {
   <div class="modal-body">
-    <div class="text-center mt-2 mb-3">
+    <div class="text-center mb-3">
       <i class="fas fa-fw fa-hard-drive primary-text" style="font-size: 75px"></i>
     </div>
-    <p>{{ 'backup.restore_help_one' | translate }}</p>
-    <ul>
+    <ul class="mb-3">
+      <li>{{ 'backup.restore_help_one' | translate }}</li>
       <li>{{ 'backup.restore_help_two' | translate }}</li>
       <li>{{ 'backup.restore_max_size' | translate: { maxBackupSizeText: maxFileSizeText } }}</li>
       <li>{{ 'backup.restore_warning' | translate }}</li>
     </ul>
     @if (selectedBackup) {
-    <div>
-      <input class="form-control custom-input" type="text" [value]="selectedBackup.fileName" disabled />
-    </div>
+    <input class="form-control custom-input" type="text" [value]="selectedBackup.fileName" disabled />
     } @if (!selectedBackup) {
     <div class="custom-file">
       <input

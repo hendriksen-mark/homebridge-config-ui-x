@@ -21,76 +21,74 @@
         alt="hb logo"
       />
       <h3 class="pt-4 pb-3 text-center">{{ 'setup.create_account' | translate }}</h3>
-      <div class="w-100">
-        <p>{{ 'setup.create_account_reason' | translate }}</p>
-        <form novalidate (ngSubmit)="createFirstUser()" [formGroup]="createUserForm">
-          <div class="md-form">
-            <i class="fas fa-fw fa-user prefix grey-text"></i>
-            <input
-              formControlName="username"
-              type="text"
-              id="form-username"
-              autocomplete="username"
-              autocapitalize="none"
-              tabindex="1"
-              class="form-control px-0"
-              [readonly]="loading"
-              [ngClass]="{
+      <p>{{ 'setup.create_account_reason' | translate }}</p>
+      <form novalidate (ngSubmit)="createFirstUser()" [formGroup]="createUserForm">
+        <div class="md-form">
+          <i class="fas fa-fw fa-user prefix grey-text"></i>
+          <input
+            formControlName="username"
+            type="text"
+            id="form-username"
+            autocomplete="username"
+            autocapitalize="none"
+            tabindex="1"
+            class="form-control px-0"
+            [readonly]="loading"
+            [ngClass]="{
                 'is-valid': (createUserForm.controls.username.dirty) && createUserForm.controls.username.valid,
                 'is-invalid': (createUserForm.controls.username.dirty) && createUserForm.controls.username.invalid
               }"
-            />
-            <label for="form-username">{{ 'users.label_username' | translate }}</label>
-          </div>
-          <div class="md-form">
-            <i class="fas fa-fw fa-lock prefix grey-text"></i>
-            <input
-              formControlName="password"
-              type="password"
-              id="form-pass"
-              autocomplete="new-password"
-              tabindex="2"
-              class="form-control px-0"
-              [readonly]="loading"
-              [ngClass]="{
+          />
+          <label for="form-username">{{ 'users.label_username' | translate }}</label>
+        </div>
+        <div class="md-form">
+          <i class="fas fa-fw fa-lock prefix grey-text"></i>
+          <input
+            formControlName="password"
+            type="password"
+            id="form-pass"
+            autocomplete="new-password"
+            tabindex="2"
+            class="form-control px-0"
+            [readonly]="loading"
+            [ngClass]="{
                 'is-valid': (createUserForm.controls.password.dirty) && createUserForm.controls.password.valid,
                 'is-invalid': (createUserForm.controls.password.dirty) && createUserForm.controls.password.errors
               }"
-            />
-            <label for="form-pass">{{ 'users.label_password' | translate }}</label>
-          </div>
-          <div class="md-form">
-            <i class="fas fa-fw fa-lock prefix grey-text"></i>
-            <input
-              formControlName="passwordConfirm"
-              type="password"
-              id="form-pass-confirm"
-              autocomplete="new-password"
-              tabindex="2"
-              class="form-control px-0"
-              [readonly]="loading"
-              [ngClass]="{
+          />
+          <label for="form-pass">{{ 'users.label_password' | translate }}</label>
+        </div>
+        <div class="md-form">
+          <i class="fas fa-fw fa-lock prefix grey-text"></i>
+          <input
+            formControlName="passwordConfirm"
+            type="password"
+            id="form-pass-confirm"
+            autocomplete="new-password"
+            tabindex="2"
+            class="form-control px-0"
+            [readonly]="loading"
+            [ngClass]="{
                 'is-valid': (createUserForm.controls.passwordConfirm.dirty) && createUserForm.controls.passwordConfirm.valid,
                 'is-invalid': (createUserForm.controls.passwordConfirm.dirty) && createUserForm.controls.passwordConfirm.errors
               }"
-            />
-            <label for="form-pass-confirm">{{ 'users.label_confirm_password' | translate }}</label>
-          </div>
-          <div class="w-100 text-center">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="createUserForm.invalid || loading"
-              [ngClass]="{
+          />
+          <label for="form-pass-confirm">{{ 'users.label_confirm_password' | translate }}</label>
+        </div>
+        <div class="w-100 text-center">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="createUserForm.invalid || loading"
+            [ngClass]="{
               'button-loading': loading
             }"
-            >
-              {{ 'setup.create_account' | translate }}
-              <i class="button-loading-overlay fas fa-fw fa-spinner fa-pulse"></i>
-            </button>
-          </div>
-        </form>
-      </div>
+          >
+            {{ 'setup.create_account' | translate }}
+            <i class="button-loading-overlay fas fa-fw fa-spinner fa-pulse"></i>
+          </button>
+        </div>
+      </form>
     </div>
     } @if (step === 'restore-backup') {
     <div class="w-100 d-flex flex-column align-items-center">

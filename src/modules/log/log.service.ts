@@ -62,7 +62,7 @@ export class LogService {
     }
 
     if (this.command) {
-      client.emit('stdout', cyan(`Loading logs using "${this.configService.ui.log.method}" method...\r\n`))
+      client.emit('stdout', cyan(`Loading logs using ${this.configService.ui.log.method} method...\r\n`))
       client.emit('stdout', cyan(`CMD: ${this.command.join(' ')}\r\n\r\n`))
       this.tailLog(client, size)
     } else if (this.useNative) {
@@ -70,7 +70,7 @@ export class LogService {
       client.emit('stdout', cyan(`File: ${this.configService.ui.log.path}\r\n\r\n`))
       this.tailLogFromFileNative(client)
     } else {
-      client.emit('stdout', red('Cannot show logs. "log" option is not configured correctly in your Homebridge config.json file.\r\n\r\n'))
+      client.emit('stdout', red('Cannot show logs. The log option is not configured correctly in your Homebridge config.json file.\r\n\r\n'))
       client.emit('stdout', cyan('See https://homebridge.io/w/JtHrm for instructions or use hb-service.\r\n'))
     }
   }
@@ -102,7 +102,7 @@ export class LogService {
       try {
         if (!this.ending) {
           client.emit('stdout', '\n\r')
-          client.emit('stdout', red(`The log tail command "${command.join(' ')}" exited with code ${code.exitCode}.\n\r`))
+          client.emit('stdout', red(`The log tail command ${command.join(' ')} exited with code ${code.exitCode}.\n\r`))
           client.emit('stdout', red('Please check the command in your config.json is correct.\n\r\n\r'))
           client.emit('stdout', cyan('See https://github.com/homebridge/homebridge-config-ui-x/wiki/Manual-Configuration#log-viewer-configuration for instructions.\r\n'))
         }

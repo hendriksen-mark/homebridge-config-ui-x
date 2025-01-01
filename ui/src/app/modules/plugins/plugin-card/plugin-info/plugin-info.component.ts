@@ -15,8 +15,8 @@ export class PluginInfoComponent implements OnInit {
   @Input() plugin: any
 
   public defaultIcon = 'assets/hb-icon.png'
-  public linkScoped = '<a href="https://github.com/homebridge/plugins/wiki/Scoped-Plugins" target="_blank">scoped <i class="fa fa/fw fas fa-fw fa-external-link-alt"></i></a>'
-  public linkVerified = '<a href="https://github.com/homebridge/plugins/wiki/Verified-Plugins" target="_blank">verified <i class="fa fa/fw fas fa-fw fa-external-link-alt"></i></a>'
+  public linkScoped = '<a href="https://github.com/homebridge/plugins/wiki/Scoped-Plugins" target="_blank"><i class="fa fa/fw fas fa-fw fa-external-link-alt"></i></a>'
+  public linkVerified = '<a href="https://github.com/homebridge/plugins/wiki/Verified-Plugins" target="_blank"><i class="fa fa/fw fas fa-fw fa-external-link-alt"></i></a>'
 
   constructor() {}
 

@@ -1,8 +1,6 @@
 <div class="modal-content hb-plugin-settings-modal">
   <div class="modal-header">
-    <h5 class="modal-title">
-      {{ 'plugins.settings.title_settings' | translate }}: {{ plugin.displayName || plugin.name }}
-    </h5>
+    <h5 class="modal-title">{{ plugin.displayName || plugin.name }}</h5>
     <button
       type="button"
       class="close"
@@ -15,11 +13,9 @@
     </button>
   </div>
   <div class="modal-body">
-    <div>
-      @if (schema.headerDisplay) {
-      <markdown class="plugin-md" [data]="schema.headerDisplay | interpolateMd"></markdown>
-      }
-    </div>
+    @if (schema.headerDisplay) {
+    <markdown class="plugin-md" [data]="schema.headerDisplay | interpolateMd"></markdown>
+    }
 
     <!-- MULTIPLE CONFIG BLOCKS-->
     @if (pluginConfig.length && !schema.singular) {
@@ -57,7 +53,7 @@
         </div>
         <div ngbAccordionCollapse>
           <div ngbAccordionBody class="card-body">
-            <app-schema-form [configSchema]="schema" [(data)]="block.config"> </app-schema-form>
+            <app-schema-form [configSchema]="schema" [(data)]="block.config"></app-schema-form>
           </div>
         </div>
       </div>
@@ -68,7 +64,7 @@
     <!-- SINGLE CONFIG BLOCK ONLY -->
     @if (pluginConfig.length && schema.singular) {
     <div class="card card-body">
-      <app-schema-form [configSchema]="schema" [(data)]="pluginConfig[0].config"> </app-schema-form>
+      <app-schema-form [configSchema]="schema" [(data)]="pluginConfig[0].config"></app-schema-form>
       @if (plugin.name==='homebridge-deconz') {
       <app-homebridge-deconz></app-homebridge-deconz>
       } @if (plugin.name==='homebridge-hue') {
