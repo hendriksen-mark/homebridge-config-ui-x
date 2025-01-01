@@ -34,12 +34,12 @@ export class TerminalService {
 
     // if terminal is not enabled, disconnect the client
     if (!this.configService.enableTerminalAccess) {
-      this.logger.error('Terminal is not enabled. Disconnecting client...')
+      this.logger.error('Terminal is not enabled, disconnecting client...')
       client.disconnect()
       return
     }
 
-    this.logger.log('Starting terminal session')
+    this.logger.log('Starting terminal session.')
 
     // check if we should use bash or sh
     const shell = await pathExists('/bin/bash') ? '/bin/bash' : '/bin/sh'

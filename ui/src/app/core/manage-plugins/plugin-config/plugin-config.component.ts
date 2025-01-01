@@ -9,14 +9,13 @@ import { v4 as uuid } from 'uuid'
 import { ApiService } from '@/app/core/api.service'
 import { RestartChildBridgesComponent } from '@/app/core/components/restart-child-bridges/restart-child-bridges.component'
 import { RestartHomebridgeComponent } from '@/app/core/components/restart-homebridge/restart-homebridge.component'
+import { SchemaFormComponent } from '@/app/core/components/schema-form/schema-form.component'
+import { PluginsMarkdownDirective } from '@/app/core/directives/plugins.markdown.directive'
+import { HomebridgeDeconzComponent } from '@/app/core/manage-plugins/custom-plugins/homebridge-deconz/homebridge-deconz.component'
+import { HomebridgeHueComponent } from '@/app/core/manage-plugins/custom-plugins/homebridge-hue/homebridge-hue.component'
 import { InterpolateMdPipe } from '@/app/core/manage-plugins/interpolate-md.pipe'
 import { ManagePluginsService } from '@/app/core/manage-plugins/manage-plugins.service'
 import { SettingsService } from '@/app/core/settings.service'
-
-import { SchemaFormComponent } from '../../components/schema-form/schema-form.component'
-import { PluginsMarkdownDirective } from '../../directives/plugins.markdown.directive'
-import { HomebridgeDeconzComponent } from '../custom-plugins/homebridge-deconz/homebridge-deconz.component'
-import { HomebridgeHueComponent } from '../custom-plugins/homebridge-hue/homebridge-hue.component'
 
 export interface PluginConfigBlock {
   config: Record<string, any>
