@@ -6,13 +6,13 @@ import { DragulaModule, DragulaService } from 'ng2-dragula'
 import { Subscription } from 'rxjs'
 
 import { AccessoriesService } from '@/app/core/accessories/accessories.service'
+import { AccessoryTileComponent } from '@/app/core/accessories/accessory-tile/accessory-tile.component'
 import { AuthService } from '@/app/core/auth/auth.service'
 import { MobileDetectService } from '@/app/core/mobile-detect.service'
 import { SettingsService } from '@/app/core/settings.service'
+import { AccessorySupportComponent } from '@/app/modules/accessories/accessory-support/accessory-support.component'
 import { AddRoomComponent } from '@/app/modules/accessories/add-room/add-room.component'
-
-import { AccessoryTileComponent } from '../../core/accessories/accessory-tile/accessory-tile.component'
-import { DragHerePlaceholderComponent } from './drag-here-placeholder/drag-here-placeholder.component'
+import { DragHerePlaceholderComponent } from '@/app/modules/accessories/drag-here-placeholder/drag-here-placeholder.component'
 
 @Component({
   selector: 'app-accessories',
@@ -39,6 +39,8 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
   public isMobile: any = false
   public hideHidden = true
   private orderSubscription: Subscription
+
+  public readonly linkInsecure = '<a href="https://github.com/homebridge/homebridge-config-ui-x/wiki/Enabling-Accessory-Control" target="_blank"><i class="fa fa-fw fa-external-link-alt"></i></a>'
 
   constructor() {
     const dragulaService = this.dragulaService
@@ -108,6 +110,13 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
       // layout unlocked
       window.localStorage.removeItem('accessories-layout-locked')
     }
+  }
+
+  openSupport() {
+    this.$modal.open(AccessorySupportComponent, {
+      size: 'lg',
+      backdrop: 'static',
+    })
   }
 
   ngOnDestroy() {
