@@ -83,6 +83,7 @@ export class ConfigService {
     auth: 'form' | 'none'
     theme: string
     lightingMode: 'auto' | 'light' | 'dark'
+    menuMode?: 'default' | 'freeze'
     sudo?: boolean
     restart?: string
     lang?: string
@@ -209,6 +210,7 @@ export class ConfigService {
       lightingMode: this.ui.lightingMode || 'auto',
       serverTimestamp: new Date().toISOString(),
       theme: this.ui.theme || 'orange',
+      menuMode: this.ui.menuMode || 'default',
     }
 
     if (!authorized) {

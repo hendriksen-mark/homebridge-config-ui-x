@@ -92,7 +92,7 @@ export class BackupService {
     const backupFileName = `homebridge-backup-${instanceId}.${new Date().getTime().toString()}.tar.gz`
     const backupPath = resolve(backupDir, backupFileName)
 
-    this.logger.log(`Creating temporary backup archive at ${backupPath}`)
+    this.logger.log(`Creating temporary backup archive at ${backupPath}.`)
 
     try {
       // resolve the real path of the storage directory (in case it's a symbolic link)
@@ -159,7 +159,7 @@ export class BackupService {
         cwd: backupDir,
         filter: (filePath, stat) => {
           if (stat.size > globalThis.backup.maxBackupFileSize) {
-            this.logger.warn(`Backup is skipping "${filePath}" because it is larger than ${globalThis.backup.maxBackupFileSizeText}.`)
+            this.logger.warn(`Backup is skipping ${filePath} because it is larger than ${globalThis.backup.maxBackupFileSizeText}.`)
             return false
           }
           return true
@@ -170,10 +170,10 @@ export class BackupService {
         'info.json',
       ])
       if (statSync(backupPath).size > globalThis.backup.maxBackupSize) {
-        this.logger.error(`Backup file exceeds maximum restore file size (${globalThis.backup.maxBackupSizeText}) ${(statSync(backupPath).size / (1024 * 1024)).toFixed(1)}MB`)
+        this.logger.error(`Backup file exceeds maximum restore file size (${globalThis.backup.maxBackupSizeText}) ${(statSync(backupPath).size / (1024 * 1024)).toFixed(1)}MB.`)
       }
     } catch (e) {
-      this.logger.log(`Backup failed, removing ${backupDir}`)
+      this.logger.log(`Backup failed, removing ${backupDir}.`)
       await remove(resolve(backupDir))
       throw e
     }
@@ -215,7 +215,7 @@ export class BackupService {
     try {
       await this.ensureScheduledBackupPath()
     } catch (e) {
-      this.logger.warn('Could not run scheduled backup:', e.message)
+      this.logger.warn(`Could not run scheduled backup as ${e.message}.`)
       return
     }
 
@@ -228,7 +228,7 @@ export class BackupService {
       ))
       await remove(resolve(backupDir))
     } catch (e) {
-      this.logger.warn('Failed to create scheduled instance backup:', e.message)
+      this.logger.warn(`Failed to create scheduled instance backup as ${e.message}.`)
     }
 
     // remove backups older than 7 days
@@ -241,7 +241,7 @@ export class BackupService {
         }
       }
     } catch (e) {
-      this.logger.warn('Failed to remove old backups:', e.message)
+      this.logger.warn(`Failed to remove old backups as ${e.message}.`)
     }
   }
 
@@ -299,7 +299,7 @@ export class BackupService {
           }
         })
     } catch (e) {
-      this.logger.warn('Could not get scheduled backups:', e.message)
+      this.logger.warn(`Could not get scheduled backups as ${e.message}.`)
       throw new InternalServerErrorException(e.message)
     }
   }
@@ -331,9 +331,9 @@ export class BackupService {
 
     try {
       await remove(backupPath)
-      this.logger.warn(`Scheduled backup ${backupId} deleted by request`)
+      this.logger.warn(`Scheduled backup ${backupId} deleted by request.`)
     } catch (e) {
-      this.logger.warn('Failed to delete scheduled backup by request:', e.message)
+      this.logger.warn(`Failed to delete scheduled backup by request as ${e.message}.`)
       throw new InternalServerErrorException(e.message)
     }
   }
@@ -372,7 +372,7 @@ export class BackupService {
     // remove temp files (called when download finished)
     async function cleanup() {
       await remove(resolve(backupDir))
-      this.logger.log(`Backup complete, removing ${backupDir}`)
+      this.logger.log(`Backup complete, removing ${backupDir}.`)
     }
 
     // set download headers
@@ -602,7 +602,7 @@ export class BackupService {
     // prepare a temp working directory
     const backupDir = await mkdtemp(join(tmpdir(), 'homebridge-backup-'))
 
-    this.logger.log(`Extracting .hbfx file to ${backupDir}`)
+    this.logger.log(`Extracting .hbfx file to ${backupDir}.`)
 
     // pipe the data to the temp directory
     await pump(data.file, Extract({
@@ -774,8 +774,8 @@ export class BackupService {
         try {
           return execSync('killall -9 homebridge; kill -9 $(pidof homebridge-config-ui-x);')
         } catch (e) {
+          this.logger.error(`Failed to restart Homebridge as ${e.message}.`)
           this.logger.error(e)
-          this.logger.error('Failed to restart Homebridge')
         }
       }
 
@@ -828,7 +828,7 @@ export class BackupService {
       if (this.configService.ui.restart) {
         return exec(this.configService.ui.restart, (err) => {
           if (err) {
-            this.logger.log('Restart command exited with an error. Failed to restart Homebridge.')
+            this.logger.log('Restart command exited with an error, failed to restart Homebridge.')
           }
         })
       }

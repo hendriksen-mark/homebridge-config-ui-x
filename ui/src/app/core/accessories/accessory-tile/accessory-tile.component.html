@@ -1,7 +1,7 @@
 <ng-container>
   <a href="javascript:void(0)" class="manage-accessory-button" (click)="$accessories.showAccessoryInformation(service)">
     @if ($accessories.readyForControl) {
-    <i class="fas fa-fw fa-cog primary-text"></i>
+    <i class="fas fa-fw fa-circle-info primary-text"></i>
     }
   </a>
   @if (!$accessories.readyForControl) {
