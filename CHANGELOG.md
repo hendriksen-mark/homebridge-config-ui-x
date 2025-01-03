@@ -2,6 +2,18 @@
 
 All notable changes to `homebridge-config-ui-x` will be documented in this file. This project tries to adhere to [Semantic Versioning](http://semver.org/).
 
+## BETA
+
+### Other Changes
+
+- auto-fix ui theme setting property if existing value is not valid
+
+### Homebridge Dependencies
+
+- `@homebridge/hap-client` @ `v2.0.5`
+- `@homebridge/node-pty-prebuilt-multiarch` @ `v0.11.14`
+- `@homebridge/plugin-ui-utils` @ `v2.0.0`
+
 ## v4.67.0 (2024-12-28)
 
 ### ⚠️ Upcoming Deprecations:
@@ -12,7 +24,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
   - Instances using `pnpm` as the package manager - consider updating your Homebridge instance to use npm instead - [more info on updating](https://github.com/homebridge/homebridge-apt-pkg/blob/latest/README.md#using-apt)
 - Note that these are not requirements for UI `v4.67.0`
 
-## UI Changes
+### UI Changes
 
 - add explanation of deleting child bridges when un-toggling
 - add filtering to search to improve results (#2286) (@justjam2013) (fixes [#2266](https://github.com/homebridge/homebridge-config-ui-x/issues/2266))
@@ -26,7 +38,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 - improve and finish up previous angular migration
 - update `hap-client` + `plugin-ui-utils` hb dependencies
 - update dependencies
-- import lint sorting of imports
+- improve lint sorting of imports
 
 ### Homebridge Dependencies
 
