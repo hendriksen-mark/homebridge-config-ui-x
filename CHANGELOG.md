@@ -4,12 +4,6 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 
 ## BETA
 
-### ⚠️ Status Page Widget Renaming
-
-This version of Homebridge UI renames some widgets. If you update, and see some blank widgets on your home screen, perform a reset of your layout widgets:
-- Click the 'Show/Hide Widgets' button in the top right corner of the status screen
-- Scroll down to the bottom of the window that appears and click the red 'Reset' button on the right
-
 ### ⚠️ Plugin Config Validation
 
 This version of Homebridge UI adds validation to plugin config screens. This does not apply to manual plugin configuration (with raw `JSON`).
@@ -43,6 +37,7 @@ Plugin developers:
     - a widget option has been added to hide node update information: this may be useful for docker/synology users
   - homebridge and ui version information has been moved from the footer to the new update info widget
 - add 'homebridge name' setting to settings page
+- migrate bootstrap from `v4` to `v5`
 
 ### Other Changes
 
