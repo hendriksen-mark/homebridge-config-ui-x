@@ -77,7 +77,6 @@
   "backup.backup_warning": "Zálohy obsahují citlivé informace a neměly by být sdíleny s ostatními.",
   "backup.button_restore_backup": "Obnovit zálohu",
   "backup.files_auto": "Previous Automated Backups",
-  "backup.label_choose_backup_file_to_restore": "Vyberte záložní soubor pro obnovení…",
   "backup.label_uploading": "Nahrávám…",
   "backup.load_error": "Nepodařilo se načíst zálohu konfigurace.",
   "backup.restore_failed": "Obnovení selhalo",

@@ -1,7 +1,18 @@
 import { Component, inject, Input, OnInit } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
-import { NgbAccordionBody, NgbAccordionButton, NgbAccordionCollapse, NgbAccordionDirective, NgbAccordionHeader, NgbAccordionItem, NgbActiveModal, NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap'
+import {
+  NgbAccordionBody,
+  NgbAccordionButton,
+  NgbAccordionCollapse,
+  NgbAccordionDirective,
+  NgbAccordionHeader,
+  NgbAccordionItem,
+  NgbAccordionToggle,
+  NgbActiveModal,
+  NgbModal,
+  NgbTooltip,
+} from '@ng-bootstrap/ng-bootstrap'
 import { TranslatePipe, TranslateService } from '@ngx-translate/core'
 import json5 from 'json5'
 import { EditorComponent } from 'ngx-monaco-editor-v2'
@@ -30,6 +41,7 @@ import { SettingsService } from '@/app/core/settings.service'
     EditorComponent,
     FormsModule,
     TranslatePipe,
+    NgbAccordionToggle,
   ],
 })
 export class ManualConfigComponent implements OnInit {
