@@ -1,6 +1,17 @@
 import { NgClass } from '@angular/common'
 import { Component, inject, Input, OnInit } from '@angular/core'
-import { NgbAccordionBody, NgbAccordionButton, NgbAccordionCollapse, NgbAccordionDirective, NgbAccordionHeader, NgbAccordionItem, NgbActiveModal, NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap'
+import {
+  NgbAccordionBody,
+  NgbAccordionButton,
+  NgbAccordionCollapse,
+  NgbAccordionDirective,
+  NgbAccordionHeader,
+  NgbAccordionItem,
+  NgbAccordionToggle,
+  NgbActiveModal,
+  NgbModal,
+  NgbTooltip,
+} from '@ng-bootstrap/ng-bootstrap'
 import { TranslatePipe, TranslateService } from '@ngx-translate/core'
 import { NgxMdModule } from 'ngx-md'
 import { ToastrService } from 'ngx-toastr'
@@ -56,6 +67,7 @@ export interface PluginSchema {
     HomebridgeHueComponent,
     TranslatePipe,
     InterpolateMdPipe,
+    NgbAccordionToggle,
   ],
 })
 export class PluginConfigComponent implements OnInit {
