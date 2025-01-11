@@ -33,6 +33,7 @@ export class PluginsComponent implements OnInit, OnDestroy {
   private $translate = inject(TranslateService)
   private $ws = inject(WsService)
 
+  public mainError = false
   public loading = true
   public installedPlugins: any = []
   public childBridges = []
@@ -53,17 +54,17 @@ export class PluginsComponent implements OnInit, OnDestroy {
       this.io.socket.emit('monitor-child-bridge-status')
 
       // Load list of installed plugins
-      await this.loadInstalledPlugins()
-
-      // Get query parameters
-      const justInstalled = this.$router.parseUrl(this.$router.url).queryParams.installed
-      if (justInstalled) {
-        const plugin = this.installedPlugins.find(x => x.name === justInstalled)
-        if (plugin && !plugin.isConfigured) {
-          this.$plugin.settings(plugin)
+      this.loadInstalledPlugins().then(() => {
+        // Get query parameters
+        const justInstalled = this.$router.parseUrl(this.$router.url).queryParams.installed
+        if (justInstalled) {
+          const plugin = this.installedPlugins.find(x => x.name === justInstalled)
+          if (plugin && !plugin.isConfigured) {
+            this.$plugin.settings(plugin)
+          }
+          this.$router.navigate(['/plugins'])
         }
-        this.$router.navigate(['/plugins'])
-      }
+      })
     })
 
     this.io.socket.on('child-bridge-status-update', (data) => {
@@ -88,6 +89,7 @@ export class PluginsComponent implements OnInit, OnDestroy {
     this.showExitButton = false
     this.installedPlugins = []
     this.loading = true
+    this.mainError = false
 
     try {
       const installedPlugins = await firstValueFrom(this.$api.get('/plugins'))
@@ -136,6 +138,8 @@ export class PluginsComponent implements OnInit, OnDestroy {
       return sortedList
     } catch (error) {
       console.error(error)
+      this.loading = false
+      this.mainError = true
       this.$toastr.error(this.$translate.instant('plugins.toast_failed_to_load_plugins'), this.$translate.instant('toast.title_error'))
     }
   }
@@ -152,9 +156,9 @@ export class PluginsComponent implements OnInit, OnDestroy {
           plugin.isConfiguredDynamicPlatform = plugin.isConfigured && Object.prototype.hasOwnProperty.call(configBlocks[0], 'platform')
 
           plugin.recommendChildBridge = plugin.isConfiguredDynamicPlatform
-          && this.$settings.env.recommendChildBridges
-          && this.$settings.env.serviceMode
-          && !['homebridge', 'homebridge-config-ui-x'].includes(plugin.name)
+            && this.$settings.env.recommendChildBridges
+            && this.$settings.env.serviceMode
+            && !['homebridge', 'homebridge-config-ui-x'].includes(plugin.name)
 
           plugin.hasChildBridges = plugin.isConfigured && configBlocks.some(x => x._bridge && x._bridge.username)
 
