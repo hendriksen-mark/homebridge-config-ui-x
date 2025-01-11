@@ -8,6 +8,10 @@
 
     background-color: $backgroundColor;
 
+    a.btn {
+      color: #ffffff !important;
+    }
+
     pre {
       background-color: #2b2b2b;
       color: #cdcdcd;
@@ -43,6 +47,7 @@
 
             .title {
               color: #6d6e7e;
+              font-weight: 300;
             }
           }
         }
@@ -54,11 +59,9 @@
     }
 
     .custom-select {
-      background: #333333
-        url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='white' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
-        right 0.75rem center/8px 10px no-repeat !important;
+      background: #333333;
       color: #eeeeee !important;
-      border: 0 !important;
+      border: 1px solid #333333 !important;
     }
 
     .setup2fa .form-control,
@@ -216,15 +219,13 @@
       color: $darkModePrimary;
     }
 
+    .btn-close {
+      --bs-btn-close-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23dddddd'><path d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/></svg>");
+    }
+
     .modal-header {
       background-color: $modalBackground;
       border-bottom: 0;
-
-      .close {
-        color: $darkModePrimary;
-        opacity: 1 !important;
-        text-shadow: none;
-      }
     }
 
     .modal-title {
@@ -254,12 +255,6 @@
 
       .list-group-item {
         background-color: $secondaryBackground;
-
-        .close {
-          color: $darkModePrimary;
-          opacity: 1 !important;
-          text-shadow: none;
-        }
       }
     }
 
@@ -293,15 +288,6 @@
     .md-form {
       input {
         color: #ffffff;
-
-        &:focus {
-          box-shadow: 0 1px 0 0 $darkModePrimary !important;
-          border-bottom: 1px solid $darkModePrimary !important;
-
-          & + label {
-            color: $darkModePrimary !important;
-          }
-        }
       }
 
       .form-control {
@@ -397,6 +383,23 @@
       .plugin-icon-card {
         width: 60px;
         height: 60px;
+      }
+    }
+
+    .ng-bs5-validate {
+      .nav-tabs {
+        border-color: #242424;
+        --bs-nav-tabs-link-hover-border-color: #242424;
+
+        li a {
+          color: #ffffff;
+        }
+
+        li .active {
+          background: #242424;
+          color: #ffffff;
+          border-color: #242424;
+        }
       }
     }
   }
