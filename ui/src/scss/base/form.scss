@@ -3,7 +3,7 @@
   color: rgba(0, 0, 0, 0.46);
 }
 
-.ng-bs4-validate {
+.ng-bs5-validate {
   .form-group {
     input.ng-touched.ng-dirty.ng-invalid {
       @extend .form-control, .is-invalid;
@@ -26,6 +26,13 @@ input {
   font-size: 0.95rem !important;
 }
 
+.custom-select {
+  padding: 7px 4px;
+  border-radius: 0.25rem;
+  width: 100%;
+  border: 1px solid #ced4da;
+}
+
 .resp-select {
   width: 100%;
   overflow: hidden;
@@ -42,4 +49,35 @@ input {
   @media (min-width: 768px) {
     width: 300px;
   }
+}
+
+.accordion {
+  --bs-accordion-border-width: 0px;
+
+  .card-header {
+    border-bottom: 0;
+  }
+}
+
+.accordion-header {
+  border-radius: 0;
+  --bs-card-border-radius: 0 !important;
+}
+
+.accordion-body {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.accordion-item {
+  border-radius: 0;
+  --bs-card-border-radius: 0 !important;
+}
+
+.accordion-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.schema-form-text {
+  margin-bottom: 1rem;
 }
