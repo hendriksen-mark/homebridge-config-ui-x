@@ -409,7 +409,7 @@ export class PluginsService {
         bugs: typeof pkg.bugs === 'object' && pkg.bugs?.url ? pkg.bugs.url : null,
       }
       plugin.author = this.scopedPlugins[pkg.name]
-      || ((pkg.maintainers && pkg.maintainers.length) ? pkg.maintainers[0].name : null)
+        || ((pkg.maintainers && pkg.maintainers.length) ? pkg.maintainers[0].name : null)
       plugin.verifiedPlugin = this.verifiedPlugins.includes(pkg.name)
       plugin.verifiedPlusPlugin = this.verifiedPlusPlugins.includes(pkg.name)
       plugin.icon = this.pluginIcons[pkg.name]
@@ -1389,7 +1389,7 @@ export class PluginsService {
         bugs: typeof pkg.bugs === 'object' && pkg.bugs?.url ? pkg.bugs.url : null,
       }
       plugin.author = this.scopedPlugins[pkg.name]
-      || ((pkg.maintainers && pkg.maintainers.length) ? pkg.maintainers[0].name : null)
+        || ((pkg.maintainers && pkg.maintainers.length) ? pkg.maintainers[0].name : null)
     } catch (e) {
       if (e.response?.status !== 404) {
         this.logger.log(`[${plugin.name}] failed to check registry.npmjs.org for updates (see https://homebridge.io/w/JJSz6 for help) as ${e.message}.`)
