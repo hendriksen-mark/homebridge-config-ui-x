@@ -1,13 +1,13 @@
 @if ($settings.env.enableAccessories) {
 <div class="row mb-3">
-  <div class="col-sm-6">
+  <div class="col-6">
     <h3 class="primary-text m-0">{{ 'accessories.title_accessories' | translate }}</h3>
   </div>
-  <div class="col-sm-6 text-end d-none d-sm-block">
-    <div class="btn-group me-2" role="group">
+  <div class="col-6 text-end">
+    <div class="btn-group me-2 d-none d-sm-inline-block" role="group">
       <button
         type="button"
-        class="btn btn-elegant status-button my-0"
+        class="btn btn-elegant my-0"
         [hidden]="isMobile"
         (click)="addRoom()"
         container="body"
@@ -23,7 +23,7 @@
     <div class="btn-group me-2" role="group">
       <button
         type="button"
-        class="btn btn-elegant status-button my-0"
+        class="btn btn-elegant my-0"
         [hidden]="isMobile"
         (click)="hideHidden = !hideHidden"
         container="body"
@@ -36,10 +36,10 @@
         <i class="fas fa-fw" [ngClass]="hideHidden ? 'fa-eye-slash' : 'fa-eye'"></i>
       </button>
     </div>
-    <div class="btn-group me-2" role="group">
+    <div class="btn-group me-2 d-none d-sm-inline-block" role="group">
       <button
         type="button"
-        class="btn btn-elegant status-button my-0"
+        class="btn btn-elegant my-0"
         [disabled]="!isMobile"
         (click)="toggleLayoutLock()"
         container="body"
@@ -53,7 +53,7 @@
       </button>
       <button
         type="button"
-        class="btn btn-elegant status-button my-0"
+        class="btn btn-elegant my-0"
         [disabled]="isMobile"
         (click)="toggleLayoutLock()"
         container="body"
@@ -68,7 +68,7 @@
     </div>
     <button
       type="button"
-      class="btn btn-elegant status-button my-0 me-0"
+      class="btn btn-elegant my-0 me-0"
       (click)="openSupport()"
       [attr.aria-label]="'support.title' | translate"
     >

@@ -50,14 +50,6 @@ gridster {
   }
 }
 
-.status-button {
-  z-index: 1000;
-
-  @media (max-width: 1023px) {
-    display: none;
-  }
-}
-
 gridster {
   &.mobile {
     #UpdateInfoWidgetComponent,
