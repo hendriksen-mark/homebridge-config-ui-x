@@ -118,7 +118,7 @@
         <div class="title">{{ 'menu.linux.label_logs' | translate }}</div>
       </div>
     </div>
-    } @if ($settings.env.enableTerminalAccess && $auth.user.admin) {
+    } @if ($auth.user.admin) {
     <div class="link">
       <div
         class="link-row"
