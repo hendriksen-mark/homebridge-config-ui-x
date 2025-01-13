@@ -71,13 +71,13 @@ export class PluginBridgeComponent implements OnInit {
   public bridgesAvailableForLink: { index: string, usesIndex: string, name: string, username: string, port: number }[] = []
   public currentlySelectedLink: { index: string, usesIndex: string, name: string, username: string, port: number } | null = null
   public currentBridgeHasLinks: boolean = false
-  public readonly linkChildBridges = '<a href="https://github.com/homebridge/homebridge/wiki/Child-Bridges" target="_blank"><i class="fa fa/fw fas fa-fw fa-external-link-alt primary-text"></i></a>'
+  public readonly linkChildBridges = '<a href="https://github.com/homebridge/homebridge/wiki/Child-Bridges" target="_blank"><i class="fas fa-fw fa-external-link-alt primary-text"></i></a>'
   public readonly linkDebug = '<a href="https://github.com/homebridge/homebridge-config-ui-x/wiki/Debug-Common-Values" target="_blank"><i class="fa fa-fw fa-external-link-alt primary-text"></i></a>'
 
   constructor() {}
 
   ngOnInit(): void {
-    this.isPlatform = this.schema.pluginType === 'platform'
+    this.getPluginType()
     this.loadPluginConfig()
     this.canShowBridgeDebug = this.$settings.env.homebridgeVersion.startsWith('2')
   }
@@ -129,6 +129,17 @@ export class PluginBridgeComponent implements OnInit {
       block._bridge = {
         username,
       }
+    }
+  }
+
+  async getPluginType() {
+    try {
+      const alias = await firstValueFrom(this.$api.get(`/plugins/alias/${encodeURIComponent(this.plugin.name)}`))
+      this.isPlatform = alias.pluginType === 'platform'
+    } catch (error) {
+      this.$activeModal.close()
+      this.$toastr.error(this.$translate.instant('plugins.config.error'), this.$translate.instant('toast.title_error'))
+      console.error(error)
     }
   }
 
