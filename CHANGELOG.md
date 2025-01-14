@@ -46,6 +46,7 @@ Plugin developers:
 ### Other Changes
 
 - improvements to GH actions and build processes (@NorthernMan54)
+- allow docker users to disable terminal from env
 
 ### Homebridge Dependencies
 
