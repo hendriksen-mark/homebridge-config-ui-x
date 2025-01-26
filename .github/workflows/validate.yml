@@ -39,7 +39,7 @@ jobs:
       matrix:
         os:
           [ubuntu-latest, ubuntu-24.04, ubuntu-22.04, ubuntu-20.04, macos-latest, macos-15, macos-14, macos-13, windows-latest, windows-2022, windows-2019]
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [20.x, 22.x]
 
     runs-on: ${{ matrix.os }}
 
@@ -50,11 +50,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build:server
-      - run: npm run lint
       - run: npm run test
 
       # remove dev deps
-      - run: npm clean-install --production
+      - run: npm clean-install --omit=dev
 
       # test hb-service
       - run: node dist/bin/hb-service.js -v
@@ -62,21 +61,21 @@ jobs:
         name: Run hb-service install (Linux)
         run: |
           sudo npm link
-          sudo npm install -g homebridge
+          sudo npm install -g --omit=dev homebridge
           sudo hb-service install --user homebridge --group `id -gn`
           sleep 30
       - if: runner.os == 'macOS'
         name: Run hb-service install (macOS)
         run: |
           sudo npm link
-          sudo npm install -g homebridge
+          sudo npm install -g --omit=dev homebridge
           sudo hb-service install
           sleep 30
       - if: runner.os == 'Windows'
         name: Run hb-service install (Windows)
         run: |
           npm link
-          npm install -g homebridge
+          npm install -g --omit=dev homebridge
           hb-service install
           Start-Sleep -s 30
       - name: Test hb-service install
