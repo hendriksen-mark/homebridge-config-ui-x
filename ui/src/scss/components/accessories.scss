@@ -165,7 +165,20 @@
       &:hover,
       &:focus {
         opacity: 1;
-        transform: scale(1.2);
+      }
+    }
+  }
+
+  .manage-accessory-button-long {
+    cursor: default;
+    padding-right: 0;
+    margin-right: -10px;
+
+    @media (hover: hover) {
+      &:active,
+      &:hover,
+      &:focus {
+        opacity: 0.5;
       }
     }
   }
