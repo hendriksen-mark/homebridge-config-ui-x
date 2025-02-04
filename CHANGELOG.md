@@ -19,6 +19,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 - updates to the `th.json` language file (#2338) (@tomzt)
 - improvements to long-click accessory control
   - also fixes accessory and room rearranging on the accessories page
+- add message for docker/synology users in node update info modal
 
 ### Other Changes
 
