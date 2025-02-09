@@ -21,6 +21,8 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 ### Other Changes
 
 - update `@ng-formworks/` dependencies
+- allow docker users to disable the UI terminal via env
+  - set `HOMEBRIDGE_CONFIG_UI_TERMINAL_ENABLED=0`
 
 ### Homebridge Dependencies
 
