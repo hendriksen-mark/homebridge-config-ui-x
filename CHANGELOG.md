@@ -17,6 +17,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 ### UI Changes
 
 - updates to the `uk.json` language file (#2348) (@xrust83)
+- fix opening control accessory modal on mobile devices
 
 ### Other Changes
 
