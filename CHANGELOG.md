@@ -23,6 +23,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 - fix do not include `--omit=dev` flag in `pnpm` commands
 - add lint job for checking all pull requests
 - updated dependencies
+- allow package mode users to disable the terminal
 
 ### Homebridge Dependencies
 
