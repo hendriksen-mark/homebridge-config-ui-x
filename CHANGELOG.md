@@ -22,10 +22,11 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 
 - fix do not include `--omit=dev` flag in `pnpm` commands
 - add lint job for checking all pull requests
+- updated dependencies
 
 ### Homebridge Dependencies
 
-- `@homebridge/hap-client` @ `v2.0.6`
+- `@homebridge/hap-client` @ `v2.1.0`
 - `@homebridge/node-pty-prebuilt-multiarch` @ `v0.11.14`
 - `@homebridge/plugin-ui-utils` @ `v2.0.2`
 
