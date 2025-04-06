@@ -308,11 +308,16 @@ export class BackupService {
    * Downloads a scheduled backup .tar.gz
    */
   async getScheduledBackup(backupId: string): Promise<StreamableFile> {
-    const backupPath = resolve(this.configService.instanceBackupPath, `homebridge-backup-${backupId}.tar.gz`)
-
-    // Check the file exists
-    if (!await pathExists(backupPath)) {
+    let backupPath = resolve(this.configService.instanceBackupPath, `homebridge-backup-${backupId}.tar.gz`)
+    try {
+      backupPath = await realpath(backupPath)
+    } catch (e) {
       throw new NotFoundException()
+    }
+
+    // Ensure the backupPath is within the instanceBackupPath
+    if (!backupPath.startsWith(this.configService.instanceBackupPath)) {
+      throw new BadRequestException('Invalid backup path')
     }
 
     return new StreamableFile(createReadStream(backupPath))
@@ -322,11 +327,16 @@ export class BackupService {
    * Removes a scheduled backup .tar.gz
    */
   async deleteScheduledBackup(backupId: string): Promise<void> {
-    const backupPath = resolve(this.configService.instanceBackupPath, `homebridge-backup-${backupId}.tar.gz`)
-
-    // Check the file exists
-    if (!await pathExists(backupPath)) {
+    let backupPath = resolve(this.configService.instanceBackupPath, `homebridge-backup-${backupId}.tar.gz`)
+    try {
+      backupPath = await realpath(backupPath)
+    } catch (e) {
       throw new NotFoundException()
+    }
+
+    // Ensure the backupPath is within the instanceBackupPath
+    if (!backupPath.startsWith(this.configService.instanceBackupPath)) {
+      throw new BadRequestException('Invalid backup path')
     }
 
     try {
@@ -342,11 +352,16 @@ export class BackupService {
    * Restore a scheduled backup .tar.gz
    */
   async restoreScheduledBackup(backupId: string): Promise<void> {
-    const backupPath = resolve(this.configService.instanceBackupPath, `homebridge-backup-${backupId}.tar.gz`)
-
-    // Check the file exists
-    if (!await pathExists(backupPath)) {
+    let backupPath = resolve(this.configService.instanceBackupPath, `homebridge-backup-${backupId}.tar.gz`)
+    try {
+      backupPath = await realpath(backupPath)
+    } catch (e) {
       throw new NotFoundException()
+    }
+
+    // Ensure the backupPath is within the instanceBackupPath
+    if (!backupPath.startsWith(this.configService.instanceBackupPath)) {
+      throw new BadRequestException('Invalid backup path')
     }
 
     // Clear restore directory

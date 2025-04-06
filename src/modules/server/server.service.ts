@@ -54,8 +54,12 @@ export class ServerService {
   }
 
   private async deleteSingleDeviceAccessories(id: string, cachedAccessoriesDir: string) {
-    const cachedAccessories = join(cachedAccessoriesDir, `cachedAccessories.${id}`)
-    const cachedAccessoriesBackup = join(cachedAccessoriesDir, `.cachedAccessories.${id}.bak`)
+    const cachedAccessories = resolve(cachedAccessoriesDir, `cachedAccessories.${id}`)
+    const cachedAccessoriesBackup = resolve(cachedAccessoriesDir, `.cachedAccessories.${id}.bak`)
+
+    if (!cachedAccessories.startsWith(cachedAccessoriesDir) || !cachedAccessoriesBackup.startsWith(cachedAccessoriesDir)) {
+      throw new BadRequestException('Invalid device ID.')
+    }
 
     if (await pathExists(cachedAccessories)) {
       await unlink(cachedAccessories)
@@ -69,9 +73,14 @@ export class ServerService {
   }
 
   private async deleteSingleDevicePairing(id: string, resetPairingInfo: boolean) {
-    const persistPath = join(this.configService.storagePath, 'persist')
-    const accessoryInfo = join(persistPath, `AccessoryInfo.${id}.json`)
-    const identifierCache = join(persistPath, `IdentifierCache.${id}.json`)
+    const persistPath = resolve(this.configService.storagePath, 'persist')
+    const accessoryInfo = resolve(persistPath, `AccessoryInfo.${id}.json`)
+    const identifierCache = resolve(persistPath, `IdentifierCache.${id}.json`)
+
+    // Validate paths
+    if (!accessoryInfo.startsWith(persistPath) || !identifierCache.startsWith(persistPath)) {
+      throw new BadRequestException('Invalid device ID.')
+    }
 
     // Only available for child bridges
     if (resetPairingInfo) {
@@ -107,11 +116,17 @@ export class ServerService {
       }
     }
 
+    if (!accessoryInfo.startsWith(persistPath) || !identifierCache.startsWith(persistPath)) {
+      throw new BadRequestException('Invalid device ID.')
+    }
     if (await pathExists(accessoryInfo)) {
       await unlink(accessoryInfo)
       this.logger.warn(`Bridge ${id} reset: removed ${accessoryInfo}.`)
     }
 
+    if (!identifierCache.startsWith(persistPath)) {
+      throw new BadRequestException('Invalid identifierCache path.')
+    }
     if (await pathExists(identifierCache)) {
       await unlink(identifierCache)
       this.logger.warn(`Bridge ${id} reset: removed ${identifierCache}.`)
