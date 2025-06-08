@@ -94,6 +94,15 @@ export class ConfigEditorController {
   }
 
   @UseGuards(AdminGuard)
+  @Put('/ui/accessory-blacklist')
+  @ApiOperation({ summary: 'Update the accessory control blacklisted instances.' })
+  @ApiBody({ description: 'Array of bridge and/or accessory instances to block control by the UI.', type: 'json', isArray: true })
+  @Put()
+  setAccessoryControlBlacklist(@Body() body) {
+    return this.configEditorService.setAccessoryControlBlacklist(body.body)
+  }
+
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: 'List the available Homebridge `config.json` backups.' })
   @Get('/backups')
   listConfigBackups() {

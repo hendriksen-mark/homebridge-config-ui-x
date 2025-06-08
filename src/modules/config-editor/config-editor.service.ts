@@ -303,19 +303,71 @@ export class ConfigEditorService {
       throw new BadRequestException('Cannot update the platform property.')
     }
 
-    // 1. get the current config for homebridge-config-ui-x
+    // 1. Get the current config for homebridge-config-ui-x
     const config = await this.getConfigFile()
-
-    // 2. update the property
     const pluginConfig = config.platforms.find(x => x.platform === 'config')
-    // If value is empty, null or undefined, delete the property
-    if (value === '' || value === null || value === undefined) {
-      delete pluginConfig[property]
+
+    // 2. Calculate the property, split dots into nested properties
+    if (property.includes('.')) {
+      const properties = property.split('.')
+      let current = pluginConfig
+
+      // Traverse the nested properties
+      for (let i = 0; i < properties.length - 1; i++) {
+        if (!current[properties[i]]) {
+          current[properties[i]] = {}
+        }
+        current = current[properties[i]]
+      }
+
+      // 3. Update or delete the final property
+      const finalProperty = properties[properties.length - 1]
+      if (value === '' || value === null || value === undefined) {
+        delete current[finalProperty]
+      } else {
+        current[finalProperty] = value
+      }
     } else {
-      pluginConfig[property] = value
+      // 3. Update or delete the top-level property
+      if (value === '' || value === null || value === undefined) {
+        delete pluginConfig[property]
+      } else {
+        pluginConfig[property] = value
+      }
     }
 
-    // 3. save the config file
+    // 4. Save the config file
+    await this.updateConfigFile(config)
+  }
+
+  /**
+   * Set the accessory control blacklist (this request is not partial)
+   */
+  public async setAccessoryControlBlacklist(value: string[]) {
+    // 1. Get the current config for homebridge-config-ui-x
+    const config = await this.getConfigFile()
+    const pluginConfig = config.platforms.find(x => x.platform === 'config')
+
+    if (!value || (Array.isArray(value) && !value.length)) {
+      // 2a. Consider the case where we want to remove the existing blacklist
+      // Clean up the accessoryControl object if it is empty or the debug flag is not set (or is false)
+      if (pluginConfig.accessoryControl) {
+        delete pluginConfig.accessoryControl.instanceBlacklist
+        if (!pluginConfig.accessoryControl.debug) {
+          delete pluginConfig.accessoryControl
+        }
+      }
+    } else if (Array.isArray(value) && value.length) {
+      // 2b. Consider the case where we want to set a new blacklist
+      if (!pluginConfig.accessoryControl) {
+        pluginConfig.accessoryControl = {}
+      }
+      pluginConfig.accessoryControl.instanceBlacklist = value
+        .filter(x => typeof x === 'string' && x.trim() !== '' && /^(?:[A-F0-9]{2}:){5}[A-F0-9]{2}$/i.test(x.trim()))
+        .map(x => x.trim().toUpperCase())
+    }
+
+    // 3. Save the config file
     await this.updateConfigFile(config)
   }
 
@@ -409,9 +461,9 @@ export class ConfigEditorService {
     const backups = await this.listConfigBackups()
 
     // Delete each backup file
-    backups.forEach(async (backupFile) => {
+    for (const backupFile of backups) {
       await unlink(resolve(this.configService.configBackupPath, backupFile.file))
-    })
+    }
   }
 
   /**

@@ -1,0 +1,94 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ 'settings.security.ui_control' | translate }}</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      [attr.aria-label]="'form.button_close' | translate"
+      (click)="$activeModal.dismiss('Dismiss')"
+      [disabled]="clicked"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="text-center mb-3"><i class="fas fa-fw fa-list-check primary-text" style="font-size: 75px"></i></div>
+    <ul class="mb-3">
+      <li>{{ 'settings.security.ui_control_desc' | translate }}</li>
+    </ul>
+    <ul class="list-group list-group-box mt-3 mb-0">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          {{ mainPairing.name }}
+          <br />
+          <small class="grey-text">
+            <i
+              class="fas fa-fw fa-link"
+              [ngClass]="{
+                'green-text': mainPairing._isPaired,
+                'grey-text': !mainPairing._isPaired
+              }"
+            ></i>
+            {{ (mainPairing._isPaired ? 'status.widget.qr_paired' : 'status.widget.qr_unpaired') | translate }} &middot;
+            <span class="font-monospace">{{ mainPairing._username }}</span> &middot; Homebridge
+          </small>
+        </span>
+        <button class="btn btn-success m-0 ms-3" disabled>ALLOWED</button>
+      </li>
+      @for (item of pairings; track item) {
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          {{ item.name }}
+          <br />
+          <small class="grey-text">
+            <i
+              class="fas fa-fw fa-link"
+              [ngClass]="{
+                'green-text': item._isPaired,
+                'grey-text': !item._isPaired
+              }"
+            ></i>
+            {{ (item._isPaired ? 'status.widget.qr_paired' : 'status.widget.qr_unpaired') | translate }} &middot;
+            <span class="font-monospace">{{ item._username }}</span> &middot; {{ item._category | titlecase }}
+          </small>
+        </span>
+        <button
+          class="btn btn-danger m-0 ms-3"
+          (click)="toggleList(item._username)"
+          [disabled]="clicked"
+          [ngClass]="{ 'btn-danger': isInList(item._username), 'btn-success': !isInList(item._username) }"
+          [attr.aria-label]="'form.button_unpair' | translate"
+        >
+          {{ (isInList(item._username) ? 'form.button_blocked': 'form.button_allowed') | translate | uppercase }}
+        </button>
+      </li>
+      }
+    </ul>
+  </div>
+  <div class="modal-footer justify-content-between">
+    <div class="text-start">
+      <button
+        type="button"
+        class="btn btn-elegant"
+        data-bs-dismiss="modal"
+        (click)="$activeModal.dismiss('Dismiss')"
+        [disabled]="clicked"
+      >
+        {{ 'form.button_close' | translate }}
+      </button>
+    </div>
+    <div class="text-center"></div>
+    <div class="text-end">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-dismiss="modal"
+        [disabled]="!blacklistHasUpdated || clicked"
+        (click)="updateBlacklist()"
+      >
+        @if (!clicked) { {{ 'form.button_save' | translate }} } @if (clicked) {
+        <i class="fas fa-fw fa-spinner fa-pulse"></i>
+        }
+      </button>
+    </div>
+  </div>
+</div>
