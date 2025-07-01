@@ -59,6 +59,12 @@ export class ServerService {
     this.accessoryInfoPath = join(this.configService.storagePath, 'persist', `AccessoryInfo.${this.accessoryId}.json`)
   }
 
+  /**
+   * Delete the cached accessory files for a single bridge.
+   * @param id
+   * @param cachedAccessoriesDir
+   * @private
+   */
   private async deleteSingleDeviceAccessories(id: string, cachedAccessoriesDir: string) {
     const cachedAccessories = join(cachedAccessoriesDir, `cachedAccessories.${id}`)
     const cachedAccessoriesBackup = join(cachedAccessoriesDir, `.cachedAccessories.${id}.bak`)
@@ -74,6 +80,12 @@ export class ServerService {
     }
   }
 
+  /**
+   * Delete the pairing information for a single bridge.
+   * @param id
+   * @param resetPairingInfo
+   * @private
+   */
   private async deleteSingleDevicePairing(id: string, resetPairingInfo: boolean) {
     const persistPath = join(this.configService.storagePath, 'persist')
     const accessoryInfo = join(persistPath, `AccessoryInfo.${id}.json`)
@@ -102,6 +114,16 @@ export class ServerService {
           otherBlocks.forEach((block: any) => {
             block._bridge.username = pluginBlock._bridge.username
           })
+
+          // Check if the original username is in the access list, if so, update it to the new username
+          const uiConfig = configFile.platforms.find(x => x.platform === 'config')
+          if (uiConfig.accessoryControl?.instanceBlacklist?.includes(id.toUpperCase())) {
+            // Remove the old username from the blacklist, add the new one, and sort the blacklist alphabetically
+            uiConfig.accessoryControl.instanceBlacklist = uiConfig.accessoryControl.instanceBlacklist
+              .filter((x: string) => x.toUpperCase() !== id.toUpperCase())
+              .concat(pluginBlock._bridge.username.toUpperCase())
+              .sort((a: string, b: string) => a.localeCompare(b))
+          }
 
           this.logger.warn(`Bridge ${id} reset: new username: ${pluginBlock._bridge.username} and new pin: ${pluginBlock._bridge.pin}.`)
           await this.configEditorService.updateConfigFile(configFile)
@@ -168,10 +190,21 @@ export class ServerService {
     this.configService.hbServiceUiRestartRequired = true
 
     const configFile = await this.configEditorService.getConfigFile()
+    const oldUsername = configFile.bridge.username
 
     // Generate new random username and pin
     configFile.bridge.pin = this.configEditorService.generatePin()
     configFile.bridge.username = this.configEditorService.generateUsername()
+
+    // Check if the original username is in the access list, if so, update it to the new username
+    const uiConfig = configFile.platforms.find(x => x.platform === 'config')
+    if (uiConfig.accessoryControl?.instanceBlacklist?.includes(oldUsername.toUpperCase())) {
+      // Remove the old username from the blacklist, add the new one, and sort the blacklist alphabetically
+      uiConfig.accessoryControl.instanceBlacklist = uiConfig.accessoryControl.instanceBlacklist
+        .filter((x: string) => x.toUpperCase() !== oldUsername.toUpperCase())
+        .concat(configFile.bridge.pin)
+        .sort((a: string, b: string) => a.localeCompare(b))
+    }
 
     this.logger.warn(`Homebridge bridge reset: new username ${configFile.bridge.username} and new pin ${configFile.bridge.pin}.`)
 
@@ -761,33 +794,10 @@ export class ServerService {
   }
 
   /**
-   * Check if the system Node.js version has changed
-   */
-  private async nodeVersionChanged(): Promise<boolean> {
-    return new Promise((res) => {
-      let result = false
-
-      const child = spawn(process.execPath, ['-v'], { shell: true })
-
-      child.stdout.once('data', (data) => {
-        result = data.toString().trim() !== process.version
-      })
-
-      child.on('error', () => {
-        result = true
-      })
-
-      child.on('close', () => {
-        return res(result)
-      })
-    })
-  }
-
-  /**
    * Upload and set a new wallpaper. Will delete an old wallpaper if it exists.
    * File upload handler
    */
-  async uploadWallpaper(data: MultipartFile) {
+  public async uploadWallpaper(data: MultipartFile) {
     // Get the config file and find the UI config block
     const configFile = await this.configEditorService.getConfigFile()
     const uiConfigBlock = configFile.platforms.find(x => x.platform === 'config')
@@ -818,7 +828,10 @@ export class ServerService {
     }
   }
 
-  async deleteWallpaper(): Promise<void> {
+  /**
+   * Delete the current wallpaper if it exists.
+   */
+  public async deleteWallpaper(): Promise<void> {
     // Get the config file and find the UI config block
     const configFile = await this.configEditorService.getConfigFile()
     const uiConfigBlock = configFile.platforms.find(x => x.platform === 'config')
@@ -841,5 +854,28 @@ export class ServerService {
       this.configService.removeWallpaperCache()
       this.logger.log('Wallpaper reference removed from the config file.')
     }
+  }
+
+  /**
+   * Check if the system Node.js version has changed
+   */
+  private async nodeVersionChanged(): Promise<boolean> {
+    return new Promise((res) => {
+      let result = false
+
+      const child = spawn(process.execPath, ['-v'], { shell: true })
+
+      child.stdout.once('data', (data) => {
+        result = data.toString().trim() !== process.version
+      })
+
+      child.on('error', () => {
+        result = true
+      })
+
+      child.on('close', () => {
+        return res(result)
+      })
+    })
   }
 }
