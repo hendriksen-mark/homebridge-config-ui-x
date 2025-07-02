@@ -1060,6 +1060,18 @@ export class PluginsService {
    * @param pluginName
    */
   public async getPluginChangeLog(pluginName: string) {
+    if (pluginName === 'homebridge') {
+      // Different flow for homebridge itself
+      try {
+        const data = await firstValueFrom(this.httpService.get('https://raw.githubusercontent.com/homebridge/homebridge/refs/heads/latest/CHANGELOG.md'))
+        return {
+          changelog: data.data,
+        }
+      } catch (e) {
+        throw new NotFoundException()
+      }
+    }
+
     await this.getInstalledPlugins()
     const plugin = this.installedPlugins.find(x => x.name === pluginName)
     if (!plugin) {
