@@ -1,7 +1,16 @@
 import { NgClass } from '@angular/common'
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import {
+  NgbActiveModal,
+  NgbAlert,
+  NgbModal,
+  NgbNav,
+  NgbNavContent,
+  NgbNavItem,
+  NgbNavLinkButton,
+  NgbNavOutlet,
+} from '@ng-bootstrap/ng-bootstrap'
 import { TranslatePipe, TranslateService } from '@ngx-translate/core'
 import { saveAs } from 'file-saver'
 import { NgxMdModule } from 'ngx-md'
@@ -28,6 +37,11 @@ import { HbV2ModalComponent } from '@/app/modules/status/widgets/update-info-wid
     TranslatePipe,
     NgClass,
     NgbAlert,
+    NgbNavOutlet,
+    NgbNav,
+    NgbNavItem,
+    NgbNavContent,
+    NgbNavLinkButton,
   ],
 })
 
@@ -49,19 +63,24 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
   @Input() isDisabled: boolean
   @Input() action: string
 
+  public targetVersionPretty = ''
   public actionComplete = false
   public actionFailed = false
-  public showReleaseNotes = false
   public justUpdatedPlugin = false
   public updateToBeta = false
-  public changeLog: string
   public childBridges: any[] = []
-  public release: any
   public presentTenseVerb: string
   public pastTenseVerb: string
   public onlineUpdateOk: boolean
   public readonly iconStar = '<i class="fas fa-fw fa-star primary-text"></i>'
   public readonly iconThumbsUp = '<i class="fas fa-fw fa-thumbs-up primary-text"></i>'
+
+  public versionNotes: string
+  public versionNotesLoaded = false
+  public fullChangelog: string
+  public fullChangelogLoaded = false
+  public releaseNotesShow = false
+  public releaseNotesTab: number = 1
 
   private io: IoNamespace
   private toastSuccess: string
@@ -75,6 +94,11 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Check if the latest version is a numerical version
+    this.targetVersionPretty = this.targetVersion === 'latest'
+      ? this.latestVersion
+      : (this.latestVersion?.match(/^\d+(\.\d+)*$/) ? `v${this.targetVersion}` : this.targetVersion)
+
     this.io = this.$ws.connectToNamespace('plugins')
     this.termTarget = document.getElementById('plugin-log-output')
     this.term.open(this.termTarget)
@@ -110,24 +134,21 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
         switch (this.targetVersion) {
           case 'latest':
             this.updateToBeta = false
-            this.getReleaseNotes()
             break
           case 'alpha':
           case 'beta':
           case 'test':
             this.updateToBeta = true
-            this.getReleaseNotes()
             break
-          default:
-            this.update()
         }
         this.presentTenseVerb = this.$translate.instant('plugins.manage.update')
         this.pastTenseVerb = this.$translate.instant('plugins.manage.updated')
+        this.getVersionNotes()
         break
     }
   }
 
-  install() {
+  private install() {
     if (!this.onlineUpdateOk) {
       return
     }
@@ -156,7 +177,7 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
     })
   }
 
-  uninstall() {
+  private uninstall() {
     this.io.request('uninstall', {
       name: this.pluginName,
       termCols: this.term.cols,
@@ -178,9 +199,11 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
     })
   }
 
-  update() {
+  public update() {
     // Hide the release notes
-    this.showReleaseNotes = false
+    this.releaseNotesShow = false
+    this.versionNotes = ''
+    this.fullChangelog = ''
 
     if (!this.onlineUpdateOk) {
       return
@@ -213,7 +236,7 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
         }
 
         try {
-          await Promise.all([this.getChangeLog(), this.getChildBridges()])
+          await this.getChildBridges()
         } catch (error) {
           console.error(error)
         }
@@ -229,7 +252,7 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
     })
   }
 
-  async upgradeHomebridge() {
+  private async upgradeHomebridge(): Promise<void> {
     let res = 'update'
 
     // Only want to show this modal updating from existing version <2 to 2
@@ -278,12 +301,32 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
     }
   }
 
-  async getChangeLog(): Promise<void> {
-    const data: { changelog: string } = await firstValueFrom(this.$api.get(`/plugins/changelog/${encodeURIComponent(this.pluginName)}`))
-    this.changeLog = data.changelog
+  private async getVersionNotes() {
+    this.releaseNotesShow = true
+
+    const [versionNotesResult, changelogResult] = await Promise.allSettled([
+      firstValueFrom(this.$api.get(`/plugins/release/${encodeURIComponent(this.pluginName)}`)),
+      firstValueFrom(this.$api.get(`/plugins/changelog/${encodeURIComponent(this.pluginName)}`)),
+    ])
+
+    if (versionNotesResult.status === 'fulfilled') {
+      if (this.latestVersion.replace(/[^0-9.]/g, '').includes(versionNotesResult.value.name.replace(/[^0-9.]/g, ''))) {
+        this.versionNotes = versionNotesResult.value.changelog
+      }
+    } else {
+      console.error('Error loading release notes:', versionNotesResult.reason)
+    }
+    this.versionNotesLoaded = true
+
+    if (changelogResult.status === 'fulfilled') {
+      this.fullChangelog = changelogResult.value.changelog
+    } else {
+      console.error('Error loading changelog:', changelogResult.reason)
+    }
+    this.fullChangelogLoaded = true
   }
 
-  async getChildBridges(): Promise<void> {
+  private async getChildBridges(): Promise<void> {
     if (!this.$settings.env.serviceMode) {
       return
     }
@@ -295,26 +338,12 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
     })
   }
 
-  getReleaseNotes() {
-    this.$api.get(`/plugins/release/${encodeURIComponent(this.pluginName)}`).subscribe({
-      next: (data) => {
-        this.showReleaseNotes = true
-        this.release = data
-      },
-      error: () => {
-        if (this.onlineUpdateOk) {
-          this.update()
-        }
-      },
-    })
-  }
-
-  public onRestartHomebridgeClick() {
+  public onRestartHomebridgeClick(): void {
     this.$router.navigate(['/restart'])
     this.$activeModal.close()
   }
 
-  public async onRestartChildBridgeClick() {
+  public async onRestartChildBridgeClick(): Promise<void> {
     try {
       for (const bridge of this.childBridges) {
         await firstValueFrom(this.$api.put(`/server/restart/${bridge.username}`, {}))
@@ -332,7 +361,7 @@ export class ManagePluginComponent implements OnInit, OnDestroy {
     }
   }
 
-  downloadLogFile() {
+  public downloadLogFile(): void {
     const blob = new Blob([this.errorLog], { type: 'text/plain;charset=utf-8' })
     saveAs(blob, `${this.pluginName}-error.log`)
   }
