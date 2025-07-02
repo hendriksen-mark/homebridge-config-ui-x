@@ -1,7 +1,25 @@
 .plugin-modal-body {
-  max-height: 60vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  .release-notes {
+    box-shadow: none;
+    max-height: 39vh;
+    overflow: auto;
+    border: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .release-tab {
+    font-size: 1rem;
+    color: lightgrey;
+  }
+
+  .tab-content {
+    border-radius: 0 0 20px 20px;
+  }
+}
+
+::ng-deep .nav-tabs {
+  --bs-nav-tabs-border-width: 0;
 }
 
 ::ng-deep .plugin-md {
