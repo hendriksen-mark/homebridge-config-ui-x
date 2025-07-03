@@ -167,6 +167,7 @@ export class BackupComponent implements OnInit {
           this.$toastr.warning(message, this.$translate.instant('toast.title_warning'))
         }
         saveAs(res.body, archiveName)
+        this.getScheduledBackups()
       },
       error: (error) => {
         this.clicked = false
