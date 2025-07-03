@@ -17,6 +17,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 ### UI Changes
 
 - fix display of current backup settings in backup modal
+- on downloading new backup file, also save in backups folder
 
 ### Homebridge Dependencies
 

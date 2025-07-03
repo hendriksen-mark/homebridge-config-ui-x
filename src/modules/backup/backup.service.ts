@@ -367,13 +367,18 @@ export class BackupService {
    * Create and download backup archive of the current homebridge instance
    */
   async downloadBackup(reply: FastifyReply): Promise<StreamableFile> {
-    const { backupDir, backupPath, backupFileName } = await this.createBackup()
+    const { backupDir, backupPath, backupFileName, instanceId } = await this.createBackup()
 
     // Remove temp files (called when download finished)
     async function cleanup() {
       await remove(resolve(backupDir))
       this.logger.log(`Backup complete, removing ${backupDir}.`)
     }
+
+    await copy(backupPath, resolve(
+      this.configService.instanceBackupPath,
+      `homebridge-backup-${instanceId}.${new Date().getTime().toString()}.tar.gz`,
+    ))
 
     // Set download headers
     reply.raw.setHeader('Content-type', 'application/octet-stream')
