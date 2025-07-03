@@ -74,6 +74,10 @@ export class BackupComponent implements OnInit {
   async saveUiSettingChange(key: string, value: any) {
     try {
       await firstValueFrom(this.$api.put('/config-editor/ui', { key, value }))
+
+      // Update the environment variable in the settings service
+      this.$settings.setEnvItem(key, value)
+
       this.showRestartToast()
     } catch (error) {
       console.error(error)
