@@ -28,6 +28,14 @@ interface NetworkAdapterAvailable {
   virtual?: boolean
 }
 
+interface NetworkAdapterSelected {
+  iface: string
+  ip4: string
+  ip6: string
+  missing: boolean
+  selected: boolean
+}
+
 @Component({
   templateUrl: './select-network-interfaces.component.html',
   standalone: true,
@@ -40,6 +48,7 @@ export class SelectNetworkInterfacesComponent implements OnInit {
   $activeModal = inject(NgbActiveModal)
 
   @Input() adaptersAvailable: NetworkAdapterAvailable[] = []
+  @Input() adaptersSelected: NetworkAdapterSelected[] = []
 
   private adaptersOriginal: string[] = []
 
@@ -48,7 +57,12 @@ export class SelectNetworkInterfacesComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.adaptersOriginal = this.adaptersAvailable.filter(x => x.selected).map(x => x.iface)
+    // Set the `selected` property for each available adapter based on the selected adapters
+    this.adaptersAvailable.forEach((adapter) => {
+      adapter.selected = this.adaptersSelected.some(x => x.iface === adapter.iface)
+    })
+
+    this.adaptersOriginal = this.adaptersSelected.map(x => x.iface)
   }
 
   onAdapterSelectionChange() {
