@@ -32,6 +32,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
   - Change between `Switch`, `Outlet`, `Lightbulb`, `Fan` for these accessory types
   - Change between `Door`, `Window`, `WindowCovering` for these accessory types
   - This can be set in the accessory info modal, more options to come in the future
+- obtain hb/ui changelog from the most recent github tag
 
 ### Homebridge Dependencies
 
