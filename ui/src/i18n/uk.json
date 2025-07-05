@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Інтерфейс Homebridge v{{ uiVersion }} встановлено, але служба сервера все ще працює на v{{ serverVersion }}.",
   "platform.version.service_restart_required": "Потрібен перезапуск служби",
   "plugins.bridge.action_error": "Не вдалося {{ action }} дочірніх мостів.",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Домашня сторінка плагіна",
   "plugins.button_set_up": "Налаштувати",
   "plugins.button_settings": "Налаштування",

@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Homebridge UI v{{ uiVersion }} zainstalowane, ale serwer nadal pracuje v{{ serverVersion }}.",
   "platform.version.service_restart_required": "Wymagany restart serwera",
   "plugins.bridge.action_error": "Błąd mostu podrzędnego przy akcji: {{ action }}.",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Strona wtyczki",
   "plugins.button_set_up": "Konfiguruj",
   "plugins.button_settings": "Ustawienia",

@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Homebridge UI v{{ uiVersion }}가 설치되었지만, 서버 서비스는 여전히 v{{ serverVersion }}를 실행 중입니다.",
   "platform.version.service_restart_required": "서비스 재시작 필요",
   "plugins.bridge.action_error": "하위 Bridge를 {{ action }}하는 데 실패했습니다.",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "플러그인 홈페이지",
   "plugins.button_set_up": "설치",
   "plugins.button_settings": "설정",

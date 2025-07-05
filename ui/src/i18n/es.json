@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Homebridge UI v{{ uiVersion }} ha sido instalado, pero el servicio aún sigue ejecutando la v{{ serverVersion }}.",
   "platform.version.service_restart_required": "Reinicio requerido",
   "plugins.bridge.action_error": "Error al {{ action }} puente(s) hijo(s).",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Inicio de Plugins",
   "plugins.button_set_up": "Configurar",
   "plugins.button_settings": "Ajustes",

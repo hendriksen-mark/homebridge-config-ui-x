@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Homebridge UI v{{ uiVersion }} is geïnstalleerd, maar de server service versie is v{{ serverVersion }}.",
   "platform.version.service_restart_required": "Herstart vereist",
   "plugins.bridge.action_error": "{{ action }} child bridge(s) mislukt.",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Plugin Homepage",
   "plugins.button_set_up": "Configureren",
   "plugins.button_settings": "Instellingen",
