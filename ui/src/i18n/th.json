@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Homebridge UI รุ่น{{ uiVersion }} ได้รับการติดตั้งแล้ว แต่บริการเซิร์ฟเวอร์ยังคงทำงานอยู่ รุ่น{{ serverVersion }}.",
   "platform.version.service_restart_required": "จำเป็นต้องรีสตาร์ทบริการ",
   "plugins.bridge.action_error": "ไม่สามารถสร้างบริดจ์ย่อย {{ action }} ได้",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "ปลั๊กอิน Homepage",
   "plugins.button_set_up": "ติดตั้ง",
   "plugins.button_settings": "การตั้งค่า",

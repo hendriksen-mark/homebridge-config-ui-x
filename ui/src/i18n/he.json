@@ -234,6 +234,7 @@
   "platform.version.restart_required": "אזהרה: ממשק ההומברידג' v{{ uiVersion }} has been installed, but the server service is still running v{{ serverVersion }}.",
   "platform.version.service_restart_required": "אתחול שירות נדרש",
   "plugins.bridge.action_error": "Failed to {{ action }} child bridge(s).",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Plugin Homepage",
   "plugins.button_set_up": "Set Up",
   "plugins.button_settings": "הגדרות",

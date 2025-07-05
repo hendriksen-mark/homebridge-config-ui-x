@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Установлена версия Homebridge UI v{{ uiVersion }}, но сервер всё ещё работает на версии v{{ serverVersion }}.",
   "platform.version.service_restart_required": "Требуется перезапуск",
   "plugins.bridge.action_error": "Не удалось {{ action }} дочерние мосты.",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Домашняя страница плагина",
   "plugins.button_set_up": "Настроить",
   "plugins.button_settings": "Конфигурация плагина",

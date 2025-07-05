@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Инсталирана е v{{ uiVersion }} од Homebridge UI, но серверот сеуште работи на v{{ serverVersion }}.",
   "platform.version.service_restart_required": "Потребно е рестартирање на сервисот",
   "plugins.bridge.action_error": "Failed to {{ action }} child bridge(s).",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Plugin Homepage",
   "plugins.button_set_up": "Set Up",
   "plugins.button_settings": "Поставки",

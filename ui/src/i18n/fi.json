@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Homebridge UI v{{ uiVersion }} on asennettu, mutta käynnissä olevan palvelimen versio on vielä v{{ serverVersion }}.",
   "platform.version.service_restart_required": "Tarvitaan uudellenkäynnistys",
   "plugins.bridge.action_error": "Virhe toiminnossa: {{ action }} lapsisillassa.",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Laajennuksen kotisivu",
   "plugins.button_set_up": "Määritä asetukset",
   "plugins.button_settings": "Laajennuksen asetukset",

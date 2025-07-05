@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Homebridge UI verze{{ uiVersion }} bylo nainstalováno, ale server stále běží na verzi{{ serverVersion }}.",
   "platform.version.service_restart_required": "Je Vyžadován Restart Služby",
   "plugins.bridge.action_error": "Nepodařilo se {{ action }} podřízený most(y).",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Domovská stránka pluginu",
   "plugins.button_set_up": "Nastavit",
   "plugins.button_settings": "Nastavení",

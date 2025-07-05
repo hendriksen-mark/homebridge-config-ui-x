@@ -234,6 +234,7 @@
   "platform.version.restart_required": "Homebridge UI v{{ uiVersion }} telah dipasang, namun server masih menjalankan v{{ serverVersion }}.",
   "platform.version.service_restart_required": "Memulai Kembali Layanan Diperlukan",
   "plugins.bridge.action_error": "Gagal untuk {{ action }} Bridge anak.",
+  "plugins.browse": "Browse Plugins",
   "plugins.button_homepage": "Homepage Plugin",
   "plugins.button_set_up": "Siapkan",
   "plugins.button_settings": "Pengaturan",

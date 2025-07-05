@@ -44,6 +44,7 @@ export class PluginsComponent implements OnInit, OnDestroy {
 
   public mainError = false
   public loading = true
+  public tab: 'main' | 'stats' = 'main'
   public installedPlugins: any = []
   public childBridges = []
   public showSearchBar = false
@@ -291,10 +292,23 @@ export class PluginsComponent implements OnInit, OnDestroy {
         this.form.setValue({ query: '' })
         this.loadInstalledPlugins()
       }
-      setTimeout(() => this.searchInput.nativeElement.blur(), 0)
     } else {
+      window.document.querySelector('body').classList.remove('bg-black')
+      this.tab = 'main'
       this.showSearchBar = true
       setTimeout(() => this.searchInput.nativeElement.focus(), 0)
+    }
+  }
+
+  showStats() {
+    if (this.tab === 'stats') {
+      window.document.querySelector('body').classList.remove('bg-black')
+      this.tab = 'main'
+    } else {
+      // Set body bg color
+      window.document.querySelector('body').classList.add('bg-black')
+      this.tab = 'stats'
+      this.showSearchBar = false
     }
   }
 
@@ -306,6 +320,8 @@ export class PluginsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    window.document.querySelector('body').classList.remove('bg-black')
+
     if (this.navigationSubscription) {
       this.navigationSubscription.unsubscribe()
     }
