@@ -28,6 +28,10 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 - show colour temp values in mired and kelvin
 - add saturation control to lightbulb control modal
 - add transparency to slider handles in accessory control modals
+- allow applying a custom service to an accessory's service
+  - Change between `Switch`, `Outlet`, `Lightbulb`, `Fan` for these accessory types
+  - Change between `Door`, `Window`, `WindowCovering` for these accessory types
+  - This can be set in the accessory info modal, more options to come in the future
 
 ### Homebridge Dependencies
 
