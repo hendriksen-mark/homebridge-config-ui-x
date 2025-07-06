@@ -1,14 +1,17 @@
 <div
   class="accessory-box"
   [ngClass]="{ 'window-on': service.values.TargetPosition }"
-  appLongclick
-  (longclick)="onLongClick()"
-  (shortclick)="onClick()"
+  (longClick)="onLongClick()"
+  (shortClick)="onClick()"
   tabindex="0"
 >
   <div class="d-flex flex-column h-100">
     @if (!service.values.TargetPosition) {
-    <div [inlineSVG]="'/assets/hap-icons/door-closed.svg'" [attr.aria-label]="'Door (Closed)'" class="accessory-svg"></div>
+    <div
+      [inlineSVG]="'/assets/hap-icons/door-closed.svg'"
+      [attr.aria-label]="'Door (Closed)'"
+      class="accessory-svg"
+    ></div>
     } @if (service.values.TargetPosition) {
     <div [inlineSVG]="'/assets/hap-icons/door-open.svg'" [attr.aria-label]="'Door (Open)'" class="accessory-svg"></div>
     }
