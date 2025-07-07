@@ -29,7 +29,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 - add saturation control to lightbulb control modal
 - add transparency to slider handles in accessory control modals
 - allow applying a custom service to an accessory's service
-  - change between `Switch`, `Outlet`, `Lightbulb`, `Fan` for these accessory types
+  - change between `Switch`, `Outlet`, `Lightbulb`, `Fan`, `Television`, `Valve`, `AirPurifier`, `Heater`, `Cooler`, `Humidifier`, `Dehumidifier` for these accessory types
   - change between `Door`, `Window`, `WindowCovering` for these accessory types
   - this can be set in the accessory info modal, more options to come in the future
 - obtain hb/ui changelog from the most recent github tag
@@ -39,6 +39,7 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 - add option to show `npm` version with node version
   - this can be enabled in the update info widget settings by clicking the spanner icon in the top right corner of the widget on hover (from a desktop, when in unlocked mode)
 - add control modal for smart speaker accessories
+- custom service changing - add more to group one
 
 ### Other Changes
 
