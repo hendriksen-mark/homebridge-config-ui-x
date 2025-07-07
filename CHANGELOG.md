@@ -37,6 +37,8 @@ All notable changes to `homebridge-config-ui-x` will be documented in this file.
 - add plugin search button, hide bar by default
 - add tab in plugins showing plugin analytics in `iframe`
 - custom service changing - add more to group one
+- add option to show `npm` version with node version
+  - this can be enabled in the update info widget settings by clicking the spanner icon in the top right corner of the widget on hover (from a desktop, when in unlocked mode)
 
 ### Other Changes
 
